@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Activity: Sorting · Algorithm Literacy Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+
+/* ─── TOKENS (same as the hub pages) ─── */
+:root {
+  --green:       #C8102E;
+  --green-light: #FDECEA;
+  --green-dark:  #8C0B1F;
+  --ink:         #1A1A1A;
+  --ink-mid:     #4A4A4A;
+  --ink-muted:   #595959;
+  --white:       #FFFFFF;
+  --surface:     #F2F2F2;
+  --border:      #DEDEDE;
+  --border-light:#EBEBEB;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+}
+body.is-dragging { cursor: grabbing; user-select: none; }
+h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 44px; font-weight: 400; line-height: 1.1; letter-spacing: -1.1px;
+}
+h1 em { font-style: italic; color: var(--green); }
+h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px; font-weight: 400; line-height: 1.2;
+}
+svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── TOP BAR (logo only — this page does not link to the hub) ─── */
+.bar {
+  position: sticky; top: 0; z-index: 100;
+  height: 72px;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 52px; gap: 24px;
+}
+.bar-logo { display: flex; align-items: center; gap: 12px; }
+.bar-logo-mark {
+  width: 40px; height: 40px; border-radius: 11px;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+}
+.bar-logo-mark svg { width: 20px; height: 20px; stroke: white; }
+.bar-logo-name { font-size: 17px; font-weight: 500; white-space: nowrap; }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: inherit; font-size: 17px; font-weight: 500; color: var(--ink);
+  background: var(--white); border: 2px solid var(--border); border-radius: 100px;
+  padding: 10px 20px; cursor: pointer; transition: border-color .15s, color .15s;
+}
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+.btn-ghost svg { width: 18px; height: 18px; }
+
+/* ─── LAYOUT ─── */
+main { max-width: 1400px; margin: 0 auto; padding: 36px 52px 80px; }
+.intro { margin-bottom: 28px; }
+.intro .eyebrow { font-size: 18px; font-weight: 500; color: var(--green); margin-bottom: 10px; }
+.intro p { font-size: 20px; color: var(--ink-mid); margin-top: 12px; max-width: 820px; }
+.intro p strong { color: var(--ink); font-weight: 500; }
+.howto {
+  display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 16px;
+  font-size: 17px; color: var(--ink-mid);
+}
+.howto span { display: inline-flex; align-items: center; gap: 10px; }
+.howto svg { width: 22px; height: 22px; color: var(--green); flex-shrink: 0; }
+
+/* ─── ZONES ─── */
+.zone {
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: 22px;
+  padding: 22px;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.zone-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-bottom: 16px; min-height: 44px;
+}
+.zone-title { display: flex; align-items: baseline; gap: 10px; }
+.zone-count { font-size: 17px; color: var(--ink-muted); }
+.zone-list {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  min-height: 120px; align-content: start;
+}
+.zone-empty {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 120px; border-radius: 14px;
+  border: 2px dashed var(--border);
+  font-size: 17px; color: var(--ink-muted); text-align: center; padding: 16px;
+}
+
+.board {
+  display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start;
+}
+/* the pool stays in view while you work through the three groups */
+.pool {
+  position: sticky; top: 92px;
+  max-height: calc(100vh - 112px); overflow-y: auto; overscroll-behavior: contain;
+}
+.pool .zone-head { flex-wrap: wrap; }
+.pool .zone-list { grid-template-columns: 1fr; }
+.pool-done {
+  grid-column: 1 / -1;
+  padding: 18px 20px; border-radius: 14px;
+  background: var(--green-light); color: var(--green-dark); font-size: 18px; line-height: 1.5;
+}
+.done-head { display: flex; align-items: flex-start; gap: 14px; }
+.done-head svg { width: 26px; height: 26px; flex-shrink: 0; margin-top: 1px; }
+.done-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.done-actions .btn-primary { padding: 13px; font-size: 17px; }
+.result-code {
+  background: var(--white); color: var(--ink);
+  border: 2px solid var(--border); border-radius: 12px;
+  padding: 10px 12px; text-align: center;
+  font-size: 22px; font-weight: 500; letter-spacing: 3px; font-variant-numeric: tabular-nums;
+  user-select: all;
+}
+.btn-copy {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; background: var(--white); color: var(--green-dark);
+  border: 2px solid var(--green); border-radius: 100px; padding: 11px;
+  font-family: inherit; font-size: 17px; font-weight: 500; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.btn-copy:hover { background: var(--green); color: var(--white); }
+.btn-copy svg { width: 18px; height: 18px; }
+.btn-copy.is-copied { background: var(--green); color: var(--white); }
+
+.tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.tier .zone-head { flex-direction: column; align-items: flex-start; }
+.tier .zone-list { grid-template-columns: 1fr; min-height: 420px; }
+.tier-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 19px; font-weight: 500; line-height: 1.2;
+  padding: 9px 16px; border-radius: 100px;
+}
+.tier-badge .dot { width: 12px; height: 12px; border-radius: 50%; background: currentColor; }
+.tier[data-zone="most"]   .tier-badge { background: var(--green); color: var(--white); }
+.tier[data-zone="medium"] .tier-badge { background: var(--green-light); color: var(--green-dark); }
+.tier[data-zone="least"]  .tier-badge { background: var(--surface); color: var(--ink-mid); }
+.tier[data-zone="most"] { border-top: 6px solid var(--green); }
+.tier[data-zone="medium"] { border-top: 6px solid #E8909C; }
+.tier[data-zone="least"] { border-top: 6px solid var(--border); }
+
+/* "Put it here" — only visible while a card is picked */
+.btn-place {
+  display: none; align-items: center; gap: 8px;
+  font-family: inherit; font-size: 16px; font-weight: 500;
+  background: var(--green); color: white; border: none; border-radius: 100px;
+  padding: 10px 18px; cursor: pointer; white-space: nowrap; transition: background .15s;
+}
+.btn-place:hover { background: var(--green-dark); }
+.btn-place svg { width: 16px; height: 16px; }
+body.is-placing .btn-place { display: inline-flex; }
+body.is-placing .zone { border-style: dashed; border-color: var(--green); cursor: pointer; }
+body.is-placing .zone:hover { background: #FFF8F7; }
+body.is-placing .zone.is-home { border-style: solid; border-color: var(--border); cursor: default; background: var(--white); }
+body.is-placing .zone.is-home .btn-place { display: none; }
+.zone.is-over { background: var(--green-light) !important; border-color: var(--green) !important; border-style: solid !important; box-shadow: 0 0 0 4px rgba(200,16,46,.12); }
+.zone.is-flash { animation: flash .6s ease; }
+@keyframes flash { 0% { box-shadow: 0 0 0 0 rgba(200,16,46,.35); } 100% { box-shadow: 0 0 0 14px rgba(200,16,46,0); } }
+
+/* ─── CARDS ─── */
+.card {
+  position: relative;
+  display: flex; flex-direction: column; gap: 6px;
+  width: 100%; text-align: left;
+  font-family: inherit; color: var(--ink);
+  background: var(--white);
+  border: 2px solid var(--border); border-radius: 14px;
+  padding: 16px 18px;
+  cursor: grab; touch-action: none; user-select: none;
+  transition: border-color .15s, box-shadow .15s, transform .15s, background .15s;
+}
+.card:hover { border-color: var(--green); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+.card:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 3px; }
+.card-title { font-size: 19px; font-weight: 500; line-height: 1.25; padding-right: 26px; }
+.card-desc { font-size: 16px; color: var(--ink-mid); line-height: 1.45; }
+.card-grip {
+  position: absolute; top: 14px; right: 14px;
+  width: 20px; height: 20px; color: var(--border);
+}
+.card:hover .card-grip { color: var(--green); }
+.card-check {
+  position: absolute; top: -12px; right: -12px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--green); color: white;
+  display: none; align-items: center; justify-content: center;
+  box-shadow: 0 4px 10px rgba(200,16,46,.35);
+}
+.card-check svg { width: 18px; height: 18px; stroke-width: 3; }
+.card.is-selected {
+  border: 3px solid var(--green); padding: 15px 17px;
+  background: var(--green-light);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(200,16,46,.22);
+}
+.card.is-selected .card-check { display: flex; }
+.card.is-selected .card-grip { display: none; }
+/* while dragging: the original stays in the grid as a dashed slot */
+.card.is-ghost {
+  background: var(--green-light); border: 2px dashed var(--green);
+  box-shadow: none; transform: none;
+}
+.card.is-ghost > * { visibility: hidden; }
+.card-float {
+  position: fixed; z-index: 2000; pointer-events: none; margin: 0;
+  border-color: var(--green);
+  box-shadow: 0 20px 44px rgba(0,0,0,.22);
+  transform: rotate(-2deg) scale(1.03);
+  cursor: grabbing;
+}
+.card.is-dropped { animation: drop .35s ease; }
+@keyframes drop { 0% { transform: scale(1.04); } 100% { transform: none; } }
+
+/* ─── HINT BAR (while a card is picked) ─── */
+.hint {
+  position: fixed; left: 50%; bottom: 28px; z-index: 900;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  display: flex; align-items: center; gap: 14px;
+  background: var(--ink); color: white;
+  border-radius: 100px; padding: 12px 12px 12px 24px;
+  font-size: 17px; box-shadow: 0 16px 40px rgba(0,0,0,.25);
+  transition: opacity .2s, transform .2s;
+  max-width: calc(100% - 32px);
+}
+.hint strong { font-weight: 500; }
+body.is-placing .hint { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.hint button {
+  font-family: inherit; font-size: 16px; font-weight: 500;
+  background: rgba(255,255,255,.14); color: white; border: none;
+  border-radius: 100px; padding: 8px 16px; cursor: pointer;
+}
+.hint button:hover { background: rgba(255,255,255,.24); }
+
+/* ─── START-OVER DIALOG (same shell as the hub modals) ─── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1100;
+  background: rgba(26,26,26,.55);
+  display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white); border-radius: 22px;
+  padding: 40px 36px 36px; width: 100%; max-width: 440px; text-align: center;
+  box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  animation: modalIn .22s ease;
+}
+@keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; margin-bottom: 10px; letter-spacing: -0.5px; }
+.modal-sub { font-size: 17px; color: var(--ink-mid); line-height: 1.55; margin-bottom: 26px; }
+.modal-actions { display: flex; flex-direction: column; gap: 10px; }
+.btn-primary {
+  width: 100%; background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 15px; font-size: 18px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.btn-primary:hover { background: var(--green-dark); }
+.btn-plain {
+  width: 100%; background: var(--surface); color: var(--ink); border: none;
+  border-radius: 100px; padding: 15px; font-size: 18px; font-weight: 500;
+  cursor: pointer; font-family: inherit;
+}
+.btn-plain:hover { background: var(--border-light); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1100px) {
+  .board { grid-template-columns: 1fr; }
+  .pool { position: static; max-height: none; overflow: visible; }
+  .pool .zone-list { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+}
+@media (max-width: 900px) {
+  .bar { padding: 0 24px; }
+  main { padding: 28px 24px 110px; }
+  h1 { font-size: 38px; }
+  .tiers { grid-template-columns: 1fr; }
+  .tier .zone-head { flex-direction: row; align-items: center; }
+  .tier .zone-list { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); min-height: 120px; }
+}
+@media (max-width: 560px) {
+  .bar-logo-name { display: none; }
+  h1 { font-size: 36px; }
+  .zone { padding: 16px; }
+  .zone-head { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="bar-logo">
+    <div class="bar-logo-mark">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+    </div>
+    <span class="bar-logo-name">Algorithm Literacy Hub</span>
+  </div>
+  <button class="btn-ghost" onclick="openReset()">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+    Start over
+  </button>
+</header>
+
+<main>
+  <section class="intro">
+    <div class="eyebrow">Activity: Sorting</div>
+    <h1>Which features would <em>help you</em> most?</h1>
+    <p>Please tell us what features you think are <strong>most helpful</strong>, what are <strong>medium</strong>, and what are <strong>least helpful</strong> to you.</p>
+    <div class="howto">
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V6a2 2 0 1 1 4 0v5"/><path d="M13 10.5V9a2 2 0 1 1 4 0v4.5a6.5 6.5 0 0 1-6.5 6.5h-.3a6 6 0 0 1-4.6-2.2L3.4 15a1.8 1.8 0 0 1 2.7-2.4L9 15"/></svg>Drag a card into a group</span>
+      <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>Or click a card, then click the group it belongs to</span>
+    </div>
+  </section>
+
+  <div class="board">
+  <section class="zone pool" data-zone="pool" aria-labelledby="poolTitle">
+    <div class="zone-head">
+      <div class="zone-title"><h2 id="poolTitle">Cards to sort</h2><span class="zone-count" data-count></span></div>
+      <button class="btn-place" data-place="pool">Put it back here</button>
+    </div>
+    <div class="zone-list" data-list></div>
+  </section>
+
+  <div class="tiers">
+    <section class="zone tier" data-zone="most" aria-label="Most helpful">
+      <div class="zone-head">
+        <div class="zone-title"><span class="tier-badge"><span class="dot"></span>Most helpful</span><span class="zone-count" data-count></span></div>
+        <button class="btn-place" data-place="most">Put it here <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
+      </div>
+      <div class="zone-list" data-list></div>
+    </section>
+    <section class="zone tier" data-zone="medium" aria-label="Medium">
+      <div class="zone-head">
+        <div class="zone-title"><span class="tier-badge"><span class="dot"></span>Medium</span><span class="zone-count" data-count></span></div>
+        <button class="btn-place" data-place="medium">Put it here <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
+      </div>
+      <div class="zone-list" data-list></div>
+    </section>
+    <section class="zone tier" data-zone="least" aria-label="Least helpful">
+      <div class="zone-head">
+        <div class="zone-title"><span class="tier-badge"><span class="dot"></span>Least helpful</span><span class="zone-count" data-count></span></div>
+        <button class="btn-place" data-place="least">Put it here <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
+      </div>
+      <div class="zone-list" data-list></div>
+    </section>
+  </div>
+  </div>
+</main>
+
+<div class="hint" role="status">
+  <span><strong id="hintName"></strong> is picked up. Now click the group it belongs to.</span>
+  <button onclick="deselect()">Cancel</button>
+</div>
+<div class="sr-only" aria-live="polite" id="announce"></div>
+
+<div class="modal-overlay" id="resetModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="resetTitle">
+    <h2 class="modal-title" id="resetTitle">Start over?</h2>
+    <p class="modal-sub">All the cards will go back to the top so you can sort them again.</p>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="resetAll()">Yes, start over</button>
+      <button class="btn-plain" id="resetCancel" onclick="closeReset()">Keep my sorting</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Card copy follows the workshop slides (Activity: Sorting).
+   The array order is also the card number used in the result code (1 = Ask Questions … 12 = Share). */
+var CARDS = [
+  { id: 'hana',      title: 'Ask Questions (Hana)', desc: 'Chat with Hana to get a quick answer.' },
+  { id: 'videos',    title: 'Self-paced Videos',    desc: 'Watch short videos on your own time to learn how things work.' },
+  { id: 'courses',   title: 'On-demand courses',    desc: 'Take a structured, multi-part course at your own pace.' },
+  { id: 'live',      title: 'Live Classes',         desc: 'Join a live class with a teacher, online or in person.' },
+  { id: 'practice',  title: 'Practice',             desc: 'Try realistic practice scenarios safely — nothing here is real.' },
+  { id: 'call',      title: 'Call us',              desc: 'Call and talk to a real volunteer on the phone.' },
+  { id: 'oneonone',  title: '1-on-1',               desc: 'Book a one-on-one video call with someone who can walk you through it.' },
+  { id: 'nearme',    title: 'Near me',              desc: 'Find a nearby senior center or library offering in-person help.' },
+  { id: 'community', title: 'Community',            desc: 'Connect with other people asking similar questions.' },
+  { id: 'badges',    title: 'Achievement System',   desc: 'Earn digital badges and levels as you learn.' },
+  { id: 'reward',    title: 'Physical Reward',      desc: 'Trade in your earned badges for a real, physical pin.' },
+  { id: 'share',     title: 'Share',                desc: "Share any page, course, article to anyone you'd like." }
+];
+var ZONE_NAMES = { pool: 'Cards to sort', most: 'Most helpful', medium: 'Medium', least: 'Least helpful' };
+var STORE_KEY = 'al-sorting-v1';   /* sessionStorage: survives a refresh, not a new tab */
+/* Result code: one digit per card, in CARDS order — 1 = Most helpful, 2 = Medium, 3 = Least helpful. */
+var TIER_DIGIT = { most: '1', medium: '2', least: '3' };
+
+var selected = null;
+var confirmedCode = null;   /* set once the participant presses "Confirm"; cleared by any later move */
+var drag = null;
+var suppressClick = false;
+
+function zoneEl(name) { return document.querySelector('[data-zone="' + name + '"]'); }
+function listOf(name) { return zoneEl(name).querySelector('[data-list]'); }
+function cardsIn(list) { return Array.prototype.slice.call(list.querySelectorAll('.card')); }
+function announce(text) { document.getElementById('announce').textContent = text; }
+
+/* ─── BUILD ─── */
+function makeCard(c) {
+  var b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'card';
+  b.dataset.id = c.id;
+  b.innerHTML =
+    '<span class="card-title">' + c.title + '</span>' +
+    '<span class="card-desc">' + c.desc + '</span>' +
+    '<svg class="card-grip" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="6" r="1"/><circle cx="15" cy="6" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="18" r="1"/><circle cx="15" cy="18" r="1"/></svg>' +
+    '<span class="card-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>';
+  b.addEventListener('pointerdown', onPointerDown);
+  b.addEventListener('click', onCardClick);
+  return b;
+}
+
+function build() {
+  var saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem(STORE_KEY)); } catch (e) {}
+  var byId = {};
+  CARDS.forEach(function (c) { byId[c.id] = makeCard(c); });
+  if (saved) {
+    confirmedCode = saved.confirmed || null;
+    Object.keys(ZONE_NAMES).forEach(function (z) {
+      (saved[z] || []).forEach(function (id) {
+        if (byId[id]) { listOf(z).appendChild(byId[id]); delete byId[id]; }
+      });
+    });
+  }
+  /* anything not in the saved state (or first visit) starts in the pool */
+  CARDS.forEach(function (c) { if (byId[c.id]) listOf('pool').appendChild(byId[c.id]); });
+  refresh();
+}
+
+/* Counts, empty states, save. Runs after every change. */
+function refresh() {
+  var state = {};
+  Object.keys(ZONE_NAMES).forEach(function (z) {
+    var list = listOf(z);
+    var cards = cardsIn(list);
+    state[z] = cards.map(function (c) { return c.dataset.id; });
+    zoneEl(z).querySelector('[data-count]').textContent = z === 'pool'
+      ? '(' + cards.length + ' left)'
+      : '(' + cards.length + ')';
+
+    var empty = list.querySelector('.zone-empty, .pool-done');
+    /* don't flash the "all sorted" note while the last card is still in the air */
+    var holding = z === 'pool' && drag && drag.active;
+    if (holding && empty && empty.className === 'pool-done') { empty.remove(); empty = null; }
+    if (cards.length === 0 && !empty && !holding) {
+      var e = document.createElement('div');
+      if (z === 'pool') {
+        e.className = 'pool-done';
+      } else {
+        e.className = 'zone-empty';
+        e.textContent = 'Drop cards here';
+      }
+      list.appendChild(e);
+    } else if (cards.length > 0 && empty) {
+      empty.remove();
+    }
+  });
+
+  var done = listOf('pool').querySelector('.pool-done');
+  if (confirmedCode && (!done || confirmedCode !== resultCode())) confirmedCode = null;
+  if (done && done.dataset.shown !== String(confirmedCode)) renderDone(done);
+  state.confirmed = confirmedCode;
+  try { sessionStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+/* ─── CONFIRM + COPY RESULT ─── */
+function resultCode() {
+  return CARDS.map(function (c) {
+    var card = document.querySelector('.card[data-id="' + c.id + '"]');
+    return TIER_DIGIT[currentZone(card)] || '0';
+  }).join('');
+}
+
+var CHECK_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>';
+var COPY_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+
+/* Before confirming: a Confirm button. After: the code and the Copy button. */
+function renderDone(el) {
+  el.dataset.shown = String(confirmedCode);
+  if (!confirmedCode) {
+    el.innerHTML =
+      '<div class="done-head">' + CHECK_ICON + '<span>All 12 cards are sorted — thank you! Move them around until you’re happy, then confirm.</span></div>' +
+      '<div class="done-actions"><button type="button" class="btn-primary" data-act="confirm">Confirm my results</button></div>';
+  } else {
+    el.innerHTML =
+      '<div class="done-head">' + CHECK_ICON + '<span>Your results are confirmed. Please copy them and send them to us.</span></div>' +
+      '<div class="done-actions">' +
+        '<div class="result-code" aria-label="Result code">' + confirmedCode + '</div>' +
+        '<button type="button" class="btn-copy" data-act="copy">' + COPY_ICON + '<span>Copy results</span></button>' +
+      '</div>';
+  }
+  el.querySelectorAll('[data-act]').forEach(function (b) {
+    b.addEventListener('click', function (ev) {
+      ev.stopPropagation();   /* keep the pool's click-to-place from firing */
+      if (b.dataset.act === 'confirm') confirmResults(); else copyResults(b);
+    });
+  });
+}
+
+function confirmResults() {
+  deselect();
+  confirmedCode = resultCode();
+  refresh();
+  var copy = document.querySelector('[data-act="copy"]');
+  if (copy) copy.focus();
+  announce('Results confirmed.');
+}
+
+function copyResults(btn) {
+  var text = confirmedCode;
+  function done(ok) {
+    btn.classList.toggle('is-copied', ok);
+    btn.querySelector('span').textContent = ok ? 'Copied!' : 'Press Ctrl+C to copy';
+    if (!ok) {
+      var r = document.createRange();
+      r.selectNodeContents(btn.parentNode.querySelector('.result-code'));
+      var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    }
+    announce(ok ? 'Results copied.' : 'Press Control C to copy.');
+  }
+  function fallback() {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    done(ok);
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
+  } else {
+    fallback();
+  }
+}
+
+function currentZone(card) { return card.closest('[data-zone]').dataset.zone; }
+
+/* ─── CLICK-TO-PLACE ─── */
+function onCardClick(ev) {
+  if (suppressClick) { suppressClick = false; return; }
+  ev.stopPropagation();
+  var card = ev.currentTarget;
+  if (selected === card) { deselect(); return; }
+  select(card);
+}
+
+function select(card) {
+  if (selected) selected.classList.remove('is-selected');
+  document.querySelectorAll('.zone.is-home').forEach(function (z) { z.classList.remove('is-home'); });
+  selected = card;
+  card.classList.add('is-selected');
+  card.setAttribute('aria-pressed', 'true');
+  card.closest('[data-zone]').classList.add('is-home');
+  document.body.classList.add('is-placing');
+  var name = card.querySelector('.card-title').textContent;
+  document.getElementById('hintName').textContent = '“' + name + '”';
+  announce(name + ' picked up. Choose a group.');
+}
+
+function deselect() {
+  if (!selected) return;
+  selected.classList.remove('is-selected');
+  selected.removeAttribute('aria-pressed');
+  selected = null;
+  document.body.classList.remove('is-placing');
+  document.querySelectorAll('.zone.is-home').forEach(function (z) { z.classList.remove('is-home'); });
+}
+
+function placeSelected(zoneName) {
+  if (!selected) return;
+  var card = selected;
+  if (currentZone(card) === zoneName) { deselect(); return; }
+  deselect();
+  listOf(zoneName).appendChild(card);
+  settle(card, zoneName);
+}
+
+/* after any move: small confirmation motion on card + zone */
+function settle(card, zoneName) {
+  refresh();
+  card.classList.remove('is-dropped'); void card.offsetWidth; card.classList.add('is-dropped');
+  var z = zoneEl(zoneName);
+  z.classList.remove('is-flash'); void z.offsetWidth; z.classList.add('is-flash');
+  announce(card.querySelector('.card-title').textContent + ' moved to ' + ZONE_NAMES[zoneName] + '.');
+}
+
+document.querySelectorAll('[data-place]').forEach(function (b) {
+  b.addEventListener('click', function (ev) { ev.stopPropagation(); placeSelected(b.dataset.place); });
+});
+document.querySelectorAll('[data-zone]').forEach(function (z) {
+  z.addEventListener('click', function () { if (selected) placeSelected(z.dataset.zone); });
+});
+document.addEventListener('click', function (ev) {
+  /* clicking empty page space puts the card down */
+  if (selected && !ev.target.closest('[data-zone], .hint')) deselect();
+});
+
+/* ─── DRAG (pointer events, so mouse, pen and touch all work) ─── */
+function onPointerDown(ev) {
+  if (ev.button !== 0) return;
+  var card = ev.currentTarget;
+  var r = card.getBoundingClientRect();
+  drag = {
+    card: card, id: ev.pointerId, active: false,
+    startX: ev.clientX, startY: ev.clientY,
+    offX: ev.clientX - r.left, offY: ev.clientY - r.top,
+    homeList: card.parentNode, homeNext: card.nextSibling,
+    float: null, over: null
+  };
+  /* listen on document: the card itself moves around the DOM while dragging */
+  document.addEventListener('pointermove', onPointerMove);
+  document.addEventListener('pointerup', onPointerUp);
+  document.addEventListener('pointercancel', onPointerCancel);
+}
+
+function startDrag() {
+  var card = drag.card;
+  deselect();
+  var r = card.getBoundingClientRect();
+  var f = card.cloneNode(true);
+  f.classList.add('card-float');
+  f.classList.remove('is-dropped');
+  f.style.width = r.width + 'px';
+  f.style.height = r.height + 'px';
+  f.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(f);
+  drag.float = f;
+  drag.active = true;
+  card.classList.add('is-ghost');
+  document.body.classList.add('is-dragging');
+}
+
+function onPointerMove(ev) {
+  if (!drag || ev.pointerId !== drag.id) return;
+  if (!drag.active) {
+    if (Math.hypot(ev.clientX - drag.startX, ev.clientY - drag.startY) < 6) return;
+    startDrag();
+  }
+  drag.float.style.left = (ev.clientX - drag.offX) + 'px';
+  drag.float.style.top = (ev.clientY - drag.offY) + 'px';
+  autoScroll(ev.clientY);
+
+  var hit = document.elementFromPoint(ev.clientX, ev.clientY);
+  var zone = hit && hit.closest('[data-zone]');
+  if (zone !== drag.over) {
+    if (drag.over) drag.over.classList.remove('is-over');
+    drag.over = zone;
+    if (zone) zone.classList.add('is-over');
+  }
+  if (zone) {
+    moveGhostTo(zone.querySelector('[data-list]'), ev.clientX, ev.clientY);
+  } else if (drag.card.parentNode !== drag.homeList || drag.card.nextSibling !== drag.homeNext) {
+    /* outside every group: show it back where it came from */
+    drag.homeList.insertBefore(drag.card, drag.homeNext);
+    refresh();
+  }
+}
+
+/* Put the dashed slot where the card would land (reading order in the grid). */
+function moveGhostTo(list, x, y) {
+  var ghost = drag.card;
+  var before = null;
+  var others = cardsIn(list).filter(function (c) { return c !== ghost; });
+  /* one column: split each card top/bottom; several columns: split left/right */
+  var oneCol = getComputedStyle(list).gridTemplateColumns.split(' ').length === 1;
+  for (var i = 0; i < others.length; i++) {
+    var r = others[i].getBoundingClientRect();
+    var inCard = oneCol ? y < r.top + r.height / 2 : (y <= r.bottom && x < r.left + r.width / 2);
+    if (y < r.top || inCard) { before = others[i]; break; }
+  }
+  if (ghost.parentNode === list && ghost.nextSibling === before) return;
+  list.insertBefore(ghost, before);
+  refresh();
+}
+
+function autoScroll(y) {
+  var edge = 80;
+  if (y < edge + 72) window.scrollBy(0, -12);
+  else if (y > window.innerHeight - edge) window.scrollBy(0, 12);
+}
+
+function endDrag(dropped) {
+  var d = drag;
+  drag = null;
+  document.removeEventListener('pointermove', onPointerMove);
+  document.removeEventListener('pointerup', onPointerUp);
+  document.removeEventListener('pointercancel', onPointerCancel);
+  if (!d.active) return;
+  suppressClick = true;
+  setTimeout(function () { suppressClick = false; }, 0);
+  d.float.remove();
+  d.card.classList.remove('is-ghost');
+  document.body.classList.remove('is-dragging');
+  if (d.over) d.over.classList.remove('is-over');
+  if (!dropped || !d.over) {
+    d.homeList.insertBefore(d.card, d.homeNext);
+    refresh();
+    return;
+  }
+  settle(d.card, d.over.dataset.zone);
+}
+function onPointerUp(ev) { if (drag && ev.pointerId === drag.id) endDrag(true); }
+function onPointerCancel(ev) { if (drag && ev.pointerId === drag.id) endDrag(false); }
+
+/* ─── START OVER ─── */
+function openReset() {
+  deselect();
+  document.getElementById('resetModal').classList.add('open');
+  document.getElementById('resetCancel').focus();
+}
+function closeReset() { document.getElementById('resetModal').classList.remove('open'); }
+function resetAll() {
+  var pool = listOf('pool');
+  CARDS.forEach(function (c) {
+    pool.appendChild(document.querySelector('.card[data-id="' + c.id + '"]'));
+  });
+  refresh();
+  closeReset();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.getElementById('resetModal').addEventListener('click', function (ev) {
+  if (ev.target === ev.currentTarget) closeReset();
+});
+document.addEventListener('keydown', function (ev) {
+  if (ev.key === 'Escape') { closeReset(); deselect(); }
+});
+
+build();
+</script>
+</body>
+</html>

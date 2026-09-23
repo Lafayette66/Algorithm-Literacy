@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>My Profile · Algorithm Literacy Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+
+/* Lightweight cross-fade between pages (Chrome/Edge support this; others just skip straight to the instant swap) */
+@view-transition {
+  navigation: auto;
+}
+
+/* ─── TOKENS ─── */
+:root {
+  --green:       #C8102E;
+  --green-light: #FDECEA;
+  --green-dark:  #8C0B1F;
+  --terra:       #C8102E;
+  --terra-light: #FDECEA;
+  --terra-dark:  #8C0B1F;
+  --coral:       #C94F3A;
+  --coral-light: #FCECEA;
+  --coral-dark:  #A23A29;
+  --ink:         #1A1A1A;
+  --ink-mid:     #4A4A4A;
+  --ink-muted:   #595959;
+  --white:       #FFFFFF;
+  --surface:     #F2F2F2;
+  --border:      #DEDEDE;
+  --border-light:#EBEBEB;
+  --bronze:      #B87333;
+  --bronze-light:#F6ECE1;
+  --silver:      #8E9299;
+  --silver-light:#EEF0F2;
+  --gold:        #C9A23A;
+  --gold-light:  #FAF3DF;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--ink);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 52px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -1.3px;
+}
+h1 em { font-style: italic; color: var(--green); }
+
+h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+h2 em { font-style: italic; }
+
+h3 {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  height: 72px;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1.5px solid var(--border);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0 52px;
+  gap: 40px;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-logo-mark {
+  width: 40px; height: 40px; border-radius: 11px;
+  background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.nav-logo-mark svg { width: 20px; height: 20px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+.nav-logo-name { font-size: 17px; font-weight: 500; color: var(--ink); white-space: nowrap; }
+
+.nav-links {
+  display: flex; align-items: center; justify-content: center; gap: 36px;
+}
+.nav-links a {
+  font-size: 17px; font-weight: 500; color: var(--ink-mid);
+  text-decoration: none; white-space: nowrap; transition: color .15s;
+}
+.nav-links a:hover { color: var(--green); }
+.nav-links a.active { color: var(--green); }
+
+/* ─── LEARN HOVER DROPDOWN ─── */
+.nav-item { position: relative; display: flex; align-items: center; height: 100%; }
+.nav-item.has-dropdown > a { display: inline-flex; align-items: center; gap: 6px; }
+.nav-item .caret { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+.nav-item:hover > a, .nav-item:focus-within > a { color: var(--green); }
+.nav-item:hover .caret, .nav-item:focus-within .caret { transform: rotate(180deg); }
+.dropdown {
+  position: absolute; top: 100%; left: 50%;
+  min-width: 320px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(0,0,0,.13);
+  padding: 10px;
+  display: flex; flex-direction: column; gap: 4px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateX(-50%) translateY(-2px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s;
+  z-index: 200;
+}
+.dropdown::before { content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px; }
+.nav-item:hover .dropdown, .nav-item:focus-within .dropdown {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translateX(-50%) translateY(10px);
+}
+.dropdown-link {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 12px 16px; border-radius: 10px;
+  text-decoration: none; transition: background .15s;
+}
+.dropdown-link:hover, .dropdown-link:focus { background: var(--green-light); outline: none; }
+.dropdown-link strong { font-size: 17px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.dropdown-link:hover strong, .dropdown-link:focus strong { color: var(--green-dark); }
+.dropdown-link span { font-size: 14px; color: var(--ink-muted); line-height: 1.45; }
+
+.nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.btn-terra {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--terra); color: white; border: none;
+  border-radius: 100px; padding: 10px 20px;
+  font-size: 16px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.btn-terra:hover { background: var(--terra-dark); }
+.btn-terra svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+
+.nav-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 500; color: var(--green-dark);
+  flex-shrink: 0; border: 1.5px solid var(--border);
+}
+
+@media (max-width: 1024px) { nav { padding: 0 32px; gap: 24px; } .nav-links { gap: 24px; } }
+@media (max-width: 900px)  { nav { grid-template-columns: 1fr auto; } .nav-links { display: none; } }
+@media (max-width: 560px)  { nav { padding: 0 18px; gap: 14px; } .btn-terra { padding: 9px 16px; } }
+@media (max-width: 380px)  { .nav-logo-name { display: none; } }
+
+/* ─── PROFILE HEADER ─── */
+.profile-hero {
+  background: var(--white);
+  border-bottom: 1.5px solid var(--border);
+  padding: 64px 52px;
+}
+.profile-hero-inner { max-width: 1100px; margin: 0 auto; }
+.profile-top {
+  display: flex; align-items: center; gap: 36px; flex-wrap: wrap;
+}
+.profile-avatar {
+  width: 120px; height: 120px; border-radius: 50%;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: 'DM Serif Display', serif;
+  font-size: 46px; color: var(--green-dark);
+  border: 2px solid var(--border);
+}
+.profile-info { flex: 1; min-width: 240px; }
+.profile-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 50px; font-weight: 400; line-height: 1.05; letter-spacing: -1.2px;
+  margin-bottom: 12px;
+}
+.profile-name em { font-style: italic; color: var(--green); }
+.profile-meta { display: flex; flex-wrap: wrap; gap: 8px 26px; }
+.profile-meta-item {
+  display: flex; align-items: center; gap: 9px;
+  font-size: 18px; color: var(--ink-mid);
+}
+.profile-meta-item svg {
+  width: 19px; height: 19px; fill: none; stroke: var(--green);
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+}
+.profile-actions { flex-shrink: 0; }
+.btn-edit {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: none; color: var(--ink-mid);
+  border: 1.5px solid var(--border); border-radius: 100px;
+  padding: 11px 22px; font-size: 16px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.btn-edit:hover { border-color: var(--green); color: var(--green); }
+.btn-edit svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* stat strip */
+.profile-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+  margin-top: 38px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border-light);
+  border-radius: 18px;
+  padding: 24px 26px;
+}
+.stat-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 42px; line-height: 1; color: var(--green);
+  margin-bottom: 8px;
+}
+.stat-num.is-text { font-size: 32px; }
+.stat-label { font-size: 16px; color: var(--ink-muted); line-height: 1.4; }
+
+@media (max-width: 760px) { .profile-stats { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .profile-hero { padding: 48px 24px; } .profile-name { font-size: 40px; } }
+
+/* ─── SHARED SECTION SHELL ─── */
+.section { padding: 60px 52px; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 32px;
+}
+.sec-link { font-size: 18px; font-weight: 500; color: var(--green); text-decoration: none; white-space: nowrap; }
+a.sec-link:hover { text-decoration: underline; }
+@media (max-width: 640px) { .section { padding: 48px 24px; } }
+
+/* ─── LEARNING CALENDAR ─── */
+.calendar-section { background: var(--surface); }
+.cal-wrap {
+  display: grid; grid-template-columns: 1.3fr 1fr; gap: 22px; align-items: start;
+}
+.cal-card {
+  background: var(--white);
+  border: 1.5px solid var(--border-light);
+  border-radius: 22px;
+  padding: 28px 30px 30px;
+}
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.cal-month { font-family: 'DM Serif Display', serif; font-size: 26px; }
+.cal-nav { display: flex; gap: 8px; }
+.cal-nav button {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: var(--white);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.cal-nav button:hover { border-color: var(--green); }
+.cal-nav svg { width: 16px; height: 16px; fill: none; stroke: var(--ink-mid); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dow {
+  text-align: center; font-size: 13px; font-weight: 500; color: var(--ink-muted);
+  letter-spacing: .04em; text-transform: uppercase; padding-bottom: 8px;
+}
+.cal-day {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 46px; gap: 4px;
+}
+.cal-num {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; color: var(--ink);
+}
+.cal-day.muted .cal-num { color: #BFBFBF; }
+.cal-day.today .cal-num { border: 2px solid var(--green); color: var(--green); font-weight: 500; }
+.cal-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+.cal-dot.ph { background: transparent; }
+
+.cal-legend { display: flex; gap: 22px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border-light); }
+.cal-legend-item { display: flex; align-items: center; gap: 8px; font-size: 15px; color: var(--ink-mid); }
+.cal-legend-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+.cal-legend-ring { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--green); }
+
+/* last 4 weeks */
+.cal-stats-card {
+  background: var(--white);
+  border: 1.5px solid var(--border-light);
+  border-radius: 22px;
+  padding: 28px 30px;
+}
+.cal-stats-card .label4 {
+  font-size: 15px; font-weight: 500; color: var(--ink-muted);
+  letter-spacing: .04em; text-transform: uppercase; margin-bottom: 18px;
+}
+.stat4-row { display: flex; flex-direction: column; gap: 16px; }
+.stat4 {
+  display: flex; align-items: baseline; gap: 14px;
+  padding-bottom: 16px; border-bottom: 1px solid var(--border-light);
+}
+.stat4:last-child { border-bottom: none; padding-bottom: 0; }
+.stat4-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 44px; line-height: .9; color: var(--green); flex-shrink: 0; min-width: 76px;
+}
+.stat4-label { font-size: 17px; color: var(--ink-mid); line-height: 1.4; }
+
+@media (max-width: 860px) { .cal-wrap { grid-template-columns: 1fr; } }
+
+/* ─── COURSE PROGRESS ─── */
+.courses-section { background: var(--white); border-top: 1.5px solid var(--border); }
+.pcourse-list { display: flex; flex-direction: column; gap: 18px; }
+.pcourse-card {
+  background: var(--white);
+  border: 1.5px solid var(--border-light);
+  border-radius: 20px;
+  padding: 28px 30px;
+  transition: all .2s;
+}
+.pcourse-card:hover { border-color: var(--border); box-shadow: 0 6px 20px rgba(0,0,0,.06); }
+.pcourse-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; }
+.pcourse-head-text { flex: 1; min-width: 0; }
+.pcourse-head-text h3 { font-size: 23px; margin-bottom: 4px; }
+.pcourse-sub { font-size: 16px; color: var(--ink-muted); }
+.pcourse-sub .pct { color: var(--green); font-weight: 500; }
+
+.btn-resume {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 12px 24px;
+  font-size: 16px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s; flex-shrink: 0;
+}
+.btn-resume:hover { background: var(--green-dark); }
+.btn-resume svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-resume.is-review { background: none; color: var(--green); border: 1.5px solid var(--border); }
+.btn-resume.is-review:hover { background: var(--green-light); border-color: var(--green); }
+.btn-resume.is-review svg { stroke: var(--green); }
+
+.pcourse-track {
+  height: 6px; border-radius: 100px;
+  background: var(--border-light); overflow: hidden;
+  margin: 20px 0 18px;
+}
+.pcourse-fill { height: 100%; border-radius: 100px; background: var(--green); }
+
+.pcourse-unit {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--surface);
+  border-radius: 14px; padding: 14px 18px;
+}
+.unit-icon {
+  width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: center;
+}
+.unit-icon svg { width: 20px; height: 20px; fill: none; stroke: var(--green); stroke-width: 1.85; stroke-linecap: round; stroke-linejoin: round; }
+.unit-icon.ui-video { background: var(--coral-light); }
+.unit-icon.ui-video svg { stroke: var(--coral); }
+.unit-text { min-width: 0; }
+.unit-upto { font-size: 14px; font-weight: 500; color: var(--ink-muted); letter-spacing: .03em; text-transform: uppercase; }
+.unit-name { font-size: 18px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.unit-meta { font-size: 15px; color: var(--ink-muted); }
+.unit-meta .dotsep { margin: 0 6px; color: var(--border); }
+
+.pcourse-done-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 15px; font-weight: 500; padding: 5px 14px; border-radius: 100px;
+  background: var(--green-light); color: var(--green-dark);
+}
+.pcourse-done-tag svg { width: 14px; height: 14px; fill: none; stroke: var(--green-dark); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (max-width: 600px) {
+  .pcourse-head { flex-direction: column; gap: 14px; }
+  .btn-resume { align-self: flex-start; }
+}
+
+/* ─── DIGITAL BADGES ─── */
+.badges-section { background: var(--surface); border-top: 1.5px solid var(--border); }
+.badge-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.badge-card {
+  background: var(--white);
+  border: 1.5px solid var(--border-light);
+  border-radius: 18px;
+  padding: 28px 22px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  transition: all .2s;
+}
+.badge-card.earned:hover { border-color: var(--green); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+.badge-medal {
+  width: 78px; height: 78px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px; position: relative;
+}
+.badge-medal svg { width: 38px; height: 38px; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.earned .badge-medal { background: var(--gold-light); border: 2px solid var(--gold); }
+.earned .badge-medal svg { stroke: var(--gold); }
+.locked { opacity: .92; }
+.locked .badge-medal { background: var(--border-light); border: 2px solid var(--border); }
+.locked .badge-medal svg { stroke: #A8A8A8; }
+.locked .badge-name { color: var(--ink-muted); }
+.locked .badge-desc { color: #8A8A8A; }
+.badge-lock {
+  position: absolute; bottom: -2px; right: -2px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #9A9896; border: 2px solid var(--white);
+  display: flex; align-items: center; justify-content: center;
+}
+.badge-lock svg { width: 12px; height: 12px; stroke: white; stroke-width: 2.2; }
+.badge-name { font-size: 18px; font-weight: 500; color: var(--ink); margin-bottom: 4px; line-height: 1.3; }
+.badge-desc { font-size: 15px; color: var(--ink-muted); line-height: 1.5; }
+
+@media (max-width: 900px) { .badge-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 460px) { .badge-grid { grid-template-columns: 1fr; } }
+
+/* level progress */
+.level-track-card {
+  background: var(--white);
+  border: 1.5px solid var(--border-light);
+  border-radius: 22px;
+  padding: 30px 34px;
+  margin-top: 26px;
+}
+.level-track-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+.level-track-head h3 { font-size: 21px; }
+.level-track-head h3 em { font-style: italic; font-family: 'DM Serif Display', serif; color: var(--bronze); }
+.level-track-head .next-note { font-size: 16px; color: var(--ink-mid); }
+.level-track-head .next-note strong { color: var(--ink); font-weight: 500; }
+
+.level-rail { position: relative; display: flex; justify-content: space-between; margin: 0 0 6px; }
+.level-rail::before {
+  content: ""; position: absolute; top: 27px; left: 8%; right: 8%;
+  height: 4px; background: var(--border-light); border-radius: 100px;
+}
+.level-rail::after {
+  content: ""; position: absolute; top: 27px; left: 8%; width: 42%;
+  height: 4px; background: linear-gradient(90deg, var(--bronze), var(--silver)); border-radius: 100px;
+}
+.level-node { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 10px; flex: 1; }
+.level-node-medal {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface); border: 2px solid var(--border);
+}
+.level-node-medal svg { width: 28px; height: 28px; fill: none; stroke: #C2C2C2; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.level-node.done .level-node-medal { background: var(--bronze-light); border-color: var(--bronze); }
+.level-node.done .level-node-medal svg { stroke: var(--bronze); }
+.level-node-name { font-size: 17px; font-weight: 500; color: var(--ink); }
+.level-node-req { font-size: 14px; color: var(--ink-muted); }
+.level-node.done .level-node-name { color: var(--bronze); }
+.level-node-badge {
+  font-size: 13px; font-weight: 500; padding: 3px 11px; border-radius: 100px;
+  background: var(--bronze-light); color: #8a5722;
+}
+
+/* ─── CLAIM PHYSICAL BADGE (terracotta) ─── */
+.claim-section { background: var(--white); border-top: 1.5px solid var(--border); }
+.claim-card {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+  border-radius: 26px;
+  padding: 46px 46px 42px;
+  color: white;
+}
+.claim-head { max-width: 640px; margin-bottom: 30px; }
+.claim-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,.18); border-radius: 100px;
+  padding: 6px 16px; margin-bottom: 18px;
+}
+.claim-tag svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.claim-tag span { font-size: 14px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; }
+.claim-card h2 { color: white; margin-bottom: 12px; }
+.claim-card h2 em { font-style: italic; }
+.claim-head p { font-size: 18px; color: rgba(255,255,255,.9); line-height: 1.7; }
+
+.claim-options { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.claim-option {
+  background: var(--white);
+  border: 2px solid transparent;
+  border-radius: 18px;
+  padding: 26px;
+  cursor: pointer; transition: all .15s; display: block;
+}
+.claim-option:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,.2); }
+.claim-option.selected { border-color: var(--green); box-shadow: 0 12px 30px rgba(0,0,0,.22); }
+.claim-option-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 18px; }
+.claim-radio {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 2px solid var(--border); flex-shrink: 0; margin-top: 3px;
+  display: flex; align-items: center; justify-content: center; transition: all .15s;
+}
+.claim-option.selected .claim-radio { border-color: var(--green); background: var(--green); }
+.claim-radio::after { content: ""; width: 9px; height: 9px; border-radius: 50%; background: white; transform: scale(0); transition: transform .15s; }
+.claim-option.selected .claim-radio::after { transform: scale(1); }
+.claim-option-icon {
+  width: 46px; height: 46px; border-radius: 12px; background: var(--green-light);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.claim-option-icon svg { width: 24px; height: 24px; fill: none; stroke: var(--green); stroke-width: 1.85; stroke-linecap: round; stroke-linejoin: round; }
+.claim-option-titles { flex: 1; min-width: 0; }
+.claim-option-titles h3 { font-size: 20px; margin-bottom: 2px; }
+.claim-option-titles p { font-size: 15px; color: var(--ink-muted); line-height: 1.5; }
+
+.claim-field { margin-bottom: 14px; }
+.claim-field:last-child { margin-bottom: 0; }
+.claim-field label { display: block; font-size: 15px; font-weight: 500; color: var(--ink-mid); margin-bottom: 6px; }
+.claim-input, .claim-select {
+  width: 100%; border: 1.5px solid var(--border); border-radius: 12px;
+  padding: 12px 14px; font-size: 16px; color: var(--ink);
+  font-family: inherit; background: var(--white); outline: none; transition: border-color .15s;
+}
+.claim-input:focus, .claim-select:focus { border-color: var(--green); }
+.claim-input::placeholder { color: var(--ink-muted); }
+.claim-field-row { display: flex; gap: 12px; }
+.claim-field-row .claim-field { flex: 1; }
+
+.claim-foot { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 28px; }
+.btn-claim {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: white; color: var(--green-dark); border: none;
+  border-radius: 100px; padding: 16px 30px;
+  font-size: 18px; font-weight: 500; cursor: pointer; font-family: inherit; transition: opacity .15s;
+}
+.btn-claim:hover { opacity: .9; }
+.btn-claim svg { width: 18px; height: 18px; fill: none; stroke: var(--green-dark); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.claim-note { font-size: 15px; color: rgba(255,255,255,.85); }
+
+@media (max-width: 760px) { .claim-options { grid-template-columns: 1fr; } .claim-card { padding: 32px 24px; } }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--white); border-top: 1.5px solid var(--border);
+  padding: 26px 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-brand { display: flex; align-items: center; gap: 10px; }
+.footer-mark {
+  width: 30px; height: 30px; border-radius: 8px; background: var(--green);
+  display: flex; align-items: center; justify-content: center;
+}
+.footer-mark svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+.footer-brand span { font-size: 15px; color: var(--ink-muted); }
+.footer-links { display: flex; gap: 26px; }
+.footer-links a { font-size: 15px; color: var(--ink-muted); text-decoration: none; transition: color .15s; }
+.footer-links a:hover { color: var(--green); }
+.footer-links a.hi { color: var(--green); font-weight: 500; }
+@media (max-width: 640px) { footer { flex-direction: column; gap: 18px; text-align: center; padding: 26px 24px; } }
+
+/* ─── ANIMATION ─── */
+@keyframes up { from { opacity:0; transform:translateY(14px);} to { opacity:1; transform:none;} }
+.profile-avatar { animation: up .5s ease .04s both; }
+.profile-name   { animation: up .45s ease .11s both; }
+.profile-meta   { animation: up .45s ease .17s both; }
+.profile-stats  { animation: up .45s ease .22s both; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+    </div>
+    <span class="nav-logo-name">Algorithm Literacy Hub</span>
+  </a>
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <div class="nav-item has-dropdown">
+      <a href="learn.html">Learn
+        <svg class="caret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="dropdown" role="menu" aria-label="Learn">
+        <a class="dropdown-link" role="menuitem" href="learn.html#self">
+          <strong>Self-paced</strong>
+          <span>Videos, courses &amp; articles at your own pace</span>
+        </a>
+        <a class="dropdown-link" role="menuitem" href="learn.html#live">
+          <strong>Live classes</strong>
+          <span>Join a class online or near you</span>
+        </a>
+        <a class="dropdown-link" role="menuitem" href="learn.html#practice">
+          <strong>Practice</strong>
+          <span>Try safe, hands-on exercises</span>
+        </a>
+      </div>
+    </div>
+    <a href="get-help.html">Get help</a>
+  </nav>
+  <div class="nav-right">
+    <div class="nav-avatar" aria-label="My profile">MC</div>
+    <button class="btn-terra" onclick="location.href='get-help.html#find-help-near-you'">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      Find help near you
+    </button>
+  </div>
+</nav>
+
+<!-- 1 · PROFILE HEADER -->
+<section class="profile-hero">
+  <div class="profile-hero-inner">
+    <div class="profile-top">
+      <div class="profile-avatar">MC</div>
+      <div class="profile-info">
+        <div class="profile-name">Maria <em>Chen</em></div>
+        <div class="profile-meta">
+          <span class="profile-meta-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+            maria.chen@email.com
+          </span>
+          <span class="profile-meta-item">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Joined March 2025
+          </span>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button class="btn-edit">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+          Edit profile
+        </button>
+      </div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">Courses completed</div></div>
+      <div class="stat-card"><div class="stat-num">2</div><div class="stat-label">Courses in progress</div></div>
+      <div class="stat-card"><div class="stat-num">4</div><div class="stat-label">Digital badges</div></div>
+      <div class="stat-card"><div class="stat-num is-text">Bronze</div><div class="stat-label">Current level</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · LEARNING CALENDAR -->
+<section class="section calendar-section">
+  <div class="section-inner">
+    <div class="sec-head">
+      <h2>Learning <em>calendar</em></h2>
+      <span class="sec-link" style="color:var(--ink-muted);">Keep your streak going</span>
+    </div>
+
+    <div class="cal-wrap">
+      <!-- month grid -->
+      <div class="cal-card">
+        <div class="cal-head">
+          <div class="cal-month">September 2026</div>
+          <div class="cal-nav">
+            <button aria-label="Previous month"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <button aria-label="Next month"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+        <div class="cal-grid">
+          <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div>
+          <div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+
+          <!-- September 1, 2026 is a Tuesday -->
+          <div class="cal-day"></div>
+          <div class="cal-day"></div>
+          <div class="cal-day"><span class="cal-num">1</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">2</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">3</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">4</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day"><span class="cal-num">5</span><span class="cal-dot"></span></div>
+
+          <div class="cal-day"><span class="cal-num">6</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day"><span class="cal-num">7</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day"><span class="cal-num">8</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">9</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">10</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">11</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day"><span class="cal-num">12</span><span class="cal-dot"></span></div>
+
+          <div class="cal-day"><span class="cal-num">13</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">14</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day"><span class="cal-num">15</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">16</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">17</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">18</span><span class="cal-dot"></span></div>
+          <div class="cal-day"><span class="cal-num">19</span><span class="cal-dot"></span></div>
+
+          <div class="cal-day"><span class="cal-num">20</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day"><span class="cal-num">21</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day"><span class="cal-num">22</span><span class="cal-dot"></span></div>
+          <div class="cal-day today"><span class="cal-num">23</span><span class="cal-dot"></span></div>
+          <div class="cal-day muted"><span class="cal-num">24</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day muted"><span class="cal-num">25</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day muted"><span class="cal-num">26</span><span class="cal-dot ph"></span></div>
+
+          <div class="cal-day muted"><span class="cal-num">27</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day muted"><span class="cal-num">28</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day muted"><span class="cal-num">29</span><span class="cal-dot ph"></span></div>
+          <div class="cal-day muted"><span class="cal-num">30</span><span class="cal-dot ph"></span></div>
+        </div>
+
+        <div class="cal-legend">
+          <div class="cal-legend-item"><span class="cal-legend-dot"></span> Studied that day</div>
+          <div class="cal-legend-item"><span class="cal-legend-ring"></span> Today</div>
+        </div>
+      </div>
+
+      <!-- last 4 weeks -->
+      <div class="cal-stats-card">
+        <div class="label4">Last 4 weeks</div>
+        <div class="stat4-row">
+          <div class="stat4"><span class="stat4-num">18</span><span class="stat4-label">Daily goals completed</span></div>
+          <div class="stat4"><span class="stat4-num">42</span><span class="stat4-label">Items completed</span></div>
+          <div class="stat4"><span class="stat4-num">535</span><span class="stat4-label">Minutes learned</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · COURSE PROGRESS -->
+<section class="section courses-section">
+  <div class="section-inner">
+    <div class="sec-head">
+      <h2>Course <em>progress</em></h2>
+      <a href="learn.html" class="sec-link">Browse all courses →</a>
+    </div>
+
+    <div class="pcourse-list">
+
+      <div class="pcourse-card">
+        <div class="pcourse-head">
+          <div class="pcourse-head-text">
+            <h3>How recommendation feeds work</h3>
+            <p class="pcourse-sub">Course 1 of 3 · <span class="pct">63% complete</span> · Estimated completion Oct 7</p>
+          </div>
+          <button class="btn-resume">Resume <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+        <div class="pcourse-track"><div class="pcourse-fill" style="width:63%"></div></div>
+        <div class="pcourse-unit">
+          <div class="unit-icon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="unit-text">
+            <div class="unit-upto">Up next</div>
+            <div class="unit-name">Why your feed shows what it shows</div>
+            <div class="unit-meta">Reading <span class="dotsep">·</span> 8 min</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pcourse-card">
+        <div class="pcourse-head">
+          <div class="pcourse-head-text">
+            <h3>Spotting misinformation online</h3>
+            <p class="pcourse-sub">Course 2 of 3 · <span class="pct">33% complete</span> · Estimated completion Oct 21</p>
+          </div>
+          <button class="btn-resume">Resume <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+        <div class="pcourse-track"><div class="pcourse-fill" style="width:33%"></div></div>
+        <div class="pcourse-unit">
+          <div class="unit-icon ui-video">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4z"/></svg>
+          </div>
+          <div class="unit-text">
+            <div class="unit-upto">Up next</div>
+            <div class="unit-name">How rumors spread on social media</div>
+            <div class="unit-meta">Video <span class="dotsep">·</span> 6 min</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pcourse-card">
+        <div class="pcourse-head">
+          <div class="pcourse-head-text">
+            <h3>Algorithms in everyday life</h3>
+            <p class="pcourse-sub">Course 3 of 3 · <span class="pct">100% complete</span> · Completed Sep 11</p>
+          </div>
+          <button class="btn-resume is-review">Review <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+        <div class="pcourse-track"><div class="pcourse-fill" style="width:100%"></div></div>
+        <div class="pcourse-unit" style="background:transparent;padding:6px 0 0;">
+          <span class="pcourse-done-tag">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+            All 6 lessons complete
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 4 · DIGITAL BADGES -->
+<section class="section badges-section">
+  <div class="section-inner">
+    <div class="sec-head">
+      <h2>Digital <em>badges</em></h2>
+      <span class="sec-link" style="color:var(--ink-muted);">4 of 8 earned</span>
+    </div>
+
+    <div class="badge-grid">
+      <!-- EARNED -->
+      <div class="badge-card earned">
+        <div class="badge-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
+        <div class="badge-name">First Steps</div>
+        <div class="badge-desc">Completed your first course</div>
+      </div>
+      <div class="badge-card earned">
+        <div class="badge-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4L12 17l-6.3 4.4L8 14 2 9.4h7.6z"/></svg></div>
+        <div class="badge-name">Privacy Pro</div>
+        <div class="badge-desc">Finished the privacy course</div>
+      </div>
+      <div class="badge-card earned">
+        <div class="badge-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg></div>
+        <div class="badge-name">Search Savvy</div>
+        <div class="badge-desc">Learned how ranking works</div>
+      </div>
+      <div class="badge-card earned">
+        <div class="badge-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 9V5a3 3 0 0 0-6 0v4"/><rect x="3" y="9" width="18" height="11" rx="2"/><path d="M12 14v3"/></svg></div>
+        <div class="badge-name">Streak Keeper</div>
+        <div class="badge-desc">Logged in 7 days in a row</div>
+      </div>
+      <!-- LOCKED -->
+      <div class="badge-card locked">
+        <div class="badge-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M12 8v4l3 2"/></svg>
+          <span class="badge-lock"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span></div>
+        <div class="badge-name">Feed Decoder</div>
+        <div class="badge-desc">Finish "Recommendation feeds"</div>
+      </div>
+      <div class="badge-card locked">
+        <div class="badge-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span class="badge-lock"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span></div>
+        <div class="badge-name">Myth Buster</div>
+        <div class="badge-desc">Finish "Spotting misinformation"</div>
+      </div>
+      <div class="badge-card locked">
+        <div class="badge-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="badge-lock"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span></div>
+        <div class="badge-name">Community Helper</div>
+        <div class="badge-desc">Answer 10 questions</div>
+      </div>
+      <div class="badge-card locked">
+        <div class="badge-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 7.4H22l-6 4.6 2.3 7.4L12 17l-6.3 4.4L8 14 2 9.4h7.6z"/></svg>
+          <span class="badge-lock"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span></div>
+        <div class="badge-name">Perfect Score</div>
+        <div class="badge-desc">Ace every quiz in a course</div>
+      </div>
+    </div>
+
+    <!-- LEVEL PROGRESS -->
+    <div class="level-track-card">
+      <div class="level-track-head">
+        <h3>Level: <em>Bronze</em></h3>
+        <span class="next-note">Earn <strong>2 more badges</strong> to reach <strong>Silver</strong></span>
+      </div>
+      <div class="level-rail">
+        <div class="level-node done">
+          <div class="level-node-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
+          <div class="level-node-name">Bronze</div>
+          <div class="level-node-req">3 badges</div>
+          <div class="level-node-badge">You're here</div>
+        </div>
+        <div class="level-node">
+          <div class="level-node-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
+          <div class="level-node-name">Silver</div>
+          <div class="level-node-req">6 badges</div>
+        </div>
+        <div class="level-node">
+          <div class="level-node-medal"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
+          <div class="level-node-name">Gold</div>
+          <div class="level-node-req">10 badges</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · CLAIM PHYSICAL BADGE -->
+<section class="section claim-section">
+  <div class="section-inner">
+    <div class="claim-card">
+      <div class="claim-head">
+        <div class="claim-tag">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+          <span>Bronze level reached</span>
+        </div>
+        <h2>Claim your physical <em>badge</em></h2>
+        <p>Congratulations on reaching Bronze! You've earned a real Bronze pin to keep. Choose how you'd like to receive it.</p>
+      </div>
+
+      <div class="claim-options">
+        <!-- Pick up in person -->
+        <label class="claim-option selected" id="opt-pickup">
+          <input type="radio" name="claim-method" value="pickup" checked hidden onchange="selectClaim('pickup')">
+          <div class="claim-option-head">
+            <span class="claim-radio"></span>
+            <span class="claim-option-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            </span>
+            <span class="claim-option-titles">
+              <h3>Pick up in person</h3>
+              <p>Collect it at a senior center or library near you</p>
+            </span>
+          </div>
+          <div class="claim-field">
+            <label for="pickup-loc">Choose a location</label>
+            <select class="claim-select" id="pickup-loc">
+              <option>Riverside Senior Center — 2.1 mi</option>
+              <option>Downtown Public Library — 3.4 mi</option>
+              <option>Eastside Community Library — 4.0 mi</option>
+              <option>Maplewood Senior Center — 5.2 mi</option>
+            </select>
+          </div>
+          <div class="claim-field">
+            <label for="pickup-when">Preferred pickup day</label>
+            <select class="claim-select" id="pickup-when">
+              <option>This week</option>
+              <option>Next week</option>
+              <option>I'll decide later</option>
+            </select>
+          </div>
+        </label>
+
+        <!-- Mail to home -->
+        <label class="claim-option" id="opt-mail">
+          <input type="radio" name="claim-method" value="mail" hidden onchange="selectClaim('mail')">
+          <div class="claim-option-head">
+            <span class="claim-radio"></span>
+            <span class="claim-option-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
+            </span>
+            <span class="claim-option-titles">
+              <h3>Mail to my home</h3>
+              <p>We'll ship it free to your address</p>
+            </span>
+          </div>
+          <div class="claim-field">
+            <label for="mail-name">Full name</label>
+            <input class="claim-input" id="mail-name" type="text" placeholder="Maria Chen">
+          </div>
+          <div class="claim-field">
+            <label for="mail-street">Street address</label>
+            <input class="claim-input" id="mail-street" type="text" placeholder="123 Main St, Apt 4">
+          </div>
+          <div class="claim-field-row">
+            <div class="claim-field">
+              <label for="mail-city">City</label>
+              <input class="claim-input" id="mail-city" type="text" placeholder="Springfield">
+            </div>
+            <div class="claim-field">
+              <label for="mail-zip">ZIP code</label>
+              <input class="claim-input" id="mail-zip" type="text" placeholder="01103">
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <div class="claim-foot">
+        <button class="btn-claim">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          Claim my badge
+        </button>
+        <span class="claim-note">Free of charge · One badge per level reached</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg></div>
+    <span>Algorithm Literacy Hub · A free community resource</span>
+  </div>
+  <div class="footer-links">
+    <a href="#" class="hi">Find a class</a>
+    <a href="#">For families &amp; friends</a>
+    <a href="#">For educators</a>
+    <a href="#">About</a>
+  </div>
+</footer>
+
+<script>
+function selectClaim(method) {
+  document.getElementById('opt-pickup').classList.toggle('selected', method === 'pickup');
+  document.getElementById('opt-mail').classList.toggle('selected', method === 'mail');
+}
+</script>
+
+<!-- ─── NOT-READY NOTICE (workshop prototype) ───
+     Any link/button that has no real destination yet opens this dimmed notice instead of doing nothing.
+     Opt a control out with data-live. -->
+<style>
+.soon-overlay {
+  position: fixed; inset: 0; z-index: 1100;
+  background: rgba(26,26,26,.55);
+  display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.soon-overlay.open { display: flex; }
+.soon-modal {
+  background: var(--white); border-radius: 22px;
+  padding: 40px 36px 36px; width: 100%; max-width: 440px; text-align: center;
+  box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  animation: soonIn .22s ease;
+}
+@keyframes soonIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+.soon-icon {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 18px;
+  background: var(--green-light); display: flex; align-items: center; justify-content: center;
+}
+.soon-icon svg { width: 26px; height: 26px; fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.soon-title { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.5px; line-height: 1.15; }
+.soon-sub { font-size: 17px; color: var(--ink-mid); line-height: 1.55; margin-bottom: 26px; }
+.soon-btn {
+  width: 100%; background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 15px; font-size: 18px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.soon-btn:hover { background: var(--green-dark); }
+.soon-btn:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 3px; }
+</style>
+<div class="soon-overlay" id="soonModal">
+  <div class="soon-modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+    <div class="soon-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+    <h2 class="soon-title" id="soonTitle">This part isn't ready yet</h2>
+    <p class="soon-sub">You didn't do anything wrong — we're still building this page. For today, please try something else on the website.</p>
+    <button class="soon-btn" id="soonClose" data-live onclick="closeSoon()">Got it</button>
+  </div>
+</div>
+<script>
+function openSoon() {
+  document.getElementById('soonModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('soonClose').focus();
+}
+function closeSoon() {
+  document.getElementById('soonModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+/* A control is "not built yet" if it's a bare # link or a button with no handler. */
+function isUnbuilt(el) {
+  if (el.hasAttribute('data-live') || el.hasAttribute('onclick')) return false;
+  if (el.tagName === 'A') return el.getAttribute('href') === '#' && !el.classList.contains('nav-logo') && el.id !== 'shareEmailLink';
+  return el.getAttribute('type') !== 'submit' && !el.closest('form');
+}
+document.addEventListener('click', function (ev) {
+  var el = ev.target.closest('a, button');
+  if (el && isUnbuilt(el)) { ev.preventDefault(); openSoon(); return; }
+  if (ev.target === document.getElementById('soonModal')) closeSoon();
+});
+document.addEventListener('keydown', function (ev) {
+  if (ev.key === 'Escape') closeSoon();
+});
+</script>
+</body>
+</html>

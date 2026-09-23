@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Learn — Algorithm Literacy Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+
+/* Lightweight cross-fade between pages (Chrome/Edge support this; others just skip straight to the instant swap) */
+@view-transition {
+  navigation: auto;
+}
+
+/* ─── TOKENS ─── */
+:root {
+  --green:       #C8102E;
+  --green-light: #FDECEA;
+  --green-dark:  #8C0B1F;
+  --terra:       #C8102E;
+  --terra-light: #FDECEA;
+  --terra-dark:  #8C0B1F;
+  --coral:       #C94F3A;
+  --coral-light: #FCECEA;
+  --ink:         #1A1A1A;
+  --ink-mid:     #4A4A4A;
+  --ink-muted:   #595959;
+  --white:       #FFFFFF;
+  --surface:     #F2F2F2;
+  --border:      #DEDEDE;
+  --border-light:#EBEBEB;
+  --amber-bg:    #FFF6E8;
+  --amber-ink:   #8A5722;
+  --amber-line:  #E8C98A;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.8;
+  color: var(--ink);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 { font-family: 'DM Serif Display', serif; font-size: 52px; font-weight: 400; line-height: 1.1; letter-spacing: -1.3px; }
+h1 em { font-style: italic; color: var(--green); }
+h2 { font-family: 'DM Serif Display', serif; font-size: 34px; font-weight: 400; line-height: 1.2; }
+h2 em { font-style: italic; color: var(--green); }
+h3 { font-size: 24px; font-weight: 500; line-height: 1.3; color: var(--ink); }
+
+/* ─── NAV ─── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  height: 72px;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1.5px solid var(--border);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  padding: 0 52px;
+  gap: 40px;
+}
+.nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0; }
+.nav-logo-mark { width: 40px; height: 40px; border-radius: 11px; background: var(--green); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-logo-mark svg { width: 20px; height: 20px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+.nav-logo-name { font-size: 17px; font-weight: 500; color: var(--ink); white-space: nowrap; }
+.nav-links { display: flex; align-items: center; justify-content: center; gap: 36px; }
+.nav-links a { font-size: 17px; font-weight: 500; color: var(--ink-mid); text-decoration: none; white-space: nowrap; transition: color .15s; }
+.nav-links a:hover { color: var(--green); }
+.nav-links a.active { color: var(--green); }
+
+/* ─── LEARN HOVER DROPDOWN ─── */
+.nav-item { position: relative; display: flex; align-items: center; height: 100%; }
+.nav-item.has-dropdown > a { display: inline-flex; align-items: center; gap: 6px; }
+.nav-item .caret { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .2s; }
+.nav-item:hover > a, .nav-item:focus-within > a { color: var(--green); }
+.nav-item:hover .caret, .nav-item:focus-within .caret { transform: rotate(180deg); }
+.dropdown {
+  position: absolute; top: 100%; left: 50%;
+  min-width: 320px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 14px 36px rgba(0,0,0,.13);
+  padding: 10px;
+  display: flex; flex-direction: column; gap: 4px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transform: translateX(-50%) translateY(-2px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s;
+  z-index: 200;
+}
+.dropdown::before { content: ""; position: absolute; left: 0; right: 0; top: -16px; height: 16px; }
+.nav-item:hover .dropdown, .nav-item:focus-within .dropdown {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translateX(-50%) translateY(10px);
+}
+.dropdown-link {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 12px 16px; border-radius: 10px;
+  text-decoration: none; transition: background .15s;
+}
+.dropdown-link:hover, .dropdown-link:focus { background: var(--green-light); outline: none; }
+.dropdown-link strong { font-size: 17px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.dropdown-link:hover strong, .dropdown-link:focus strong { color: var(--green-dark); }
+.dropdown-link span { font-size: 14px; color: var(--ink-muted); line-height: 1.45; }
+
+.nav-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.btn-terra {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--terra); color: white; border: none;
+  border-radius: 100px; padding: 10px 20px;
+  font-size: 16px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background .15s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.btn-terra:hover { background: var(--terra-dark); }
+.btn-terra svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+.nav-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 500; color: var(--green-dark);
+  flex-shrink: 0; border: 1.5px solid var(--border); text-decoration: none;
+}
+@media (max-width: 1024px) { nav { padding: 0 32px; gap: 24px; } .nav-links { gap: 24px; } }
+@media (max-width: 900px)  { nav { grid-template-columns: 1fr auto; } .nav-links { display: none; } }
+@media (max-width: 560px)  { nav { padding: 0 18px; gap: 14px; } .btn-terra { padding: 9px 16px; } }
+@media (max-width: 380px)  { .nav-logo-name { display: none; } }
+
+/* ─── GREETING HERO ─── */
+.greet { background: var(--white); border-bottom: 1.5px solid var(--border); padding: 56px 52px 52px; }
+.greet-inner { max-width: 1100px; margin: 0 auto; }
+.greet-top { display: flex; align-items: center; gap: 22px; margin-bottom: 8px; }
+.greet-avatar {
+  width: 76px; height: 76px; border-radius: 50%;
+  background: var(--green-light);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  font-family: 'DM Serif Display', serif; font-size: 34px; color: var(--green-dark);
+}
+.greet-title { font-family: 'DM Serif Display', serif; font-size: 46px; font-weight: 400; line-height: 1.05; letter-spacing: -1.1px; }
+.greet-sub { font-size: 21px; color: var(--ink-mid); margin-bottom: 30px; }
+.greet-search { max-width: 720px; margin-bottom: 22px; }
+.search-bar {
+  display: flex; align-items: center;
+  background: var(--white); border: 2px solid var(--border);
+  border-radius: 100px; padding: 15px 22px;
+  transition: border-color .15s; min-width: 0;
+}
+.search-bar:focus-within { border-color: var(--green); }
+.search-bar svg { width: 21px; height: 21px; fill: none; stroke: var(--ink-muted); stroke-width: 2; stroke-linecap: round; margin-right: 12px; flex-shrink: 0; }
+.search-bar input { flex: 1; min-width: 0; border: none; background: transparent; font-size: 18px; color: var(--ink); font-family: inherit; outline: none; }
+.search-bar input::placeholder { color: var(--ink-muted); }
+.topic-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.topic-label { font-size: 17px; font-weight: 500; color: var(--ink-muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  font-size: 16px; font-weight: 500; padding: 9px 20px; border-radius: 100px;
+  border: 1.5px solid var(--border); color: var(--ink-mid);
+  background: var(--white); cursor: pointer; font-family: inherit; transition: all .15s; line-height: 1.4;
+}
+.chip:hover { border-color: var(--green); color: var(--green); background: var(--green-light); }
+@media (max-width: 600px) {
+  .greet { padding: 44px 20px; }
+  .greet-title { font-size: 34px; }
+  .greet-avatar { width: 60px; height: 60px; font-size: 26px; }
+}
+
+/* ─── TABS ─── */
+.tabs-band { background: var(--white); border-bottom: 1.5px solid var(--border); padding: 0 52px; position: sticky; top: 72px; z-index: 90; }
+.tabs-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 36px; }
+.tab {
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  font-size: 19px; font-weight: 500; color: var(--ink-mid);
+  padding: 18px 2px; border-bottom: 3px solid transparent; margin-bottom: -1.5px;
+  transition: color .15s;
+}
+.tab:hover { color: var(--green); }
+.tab.active { color: var(--green); border-bottom-color: var(--green); }
+@media (max-width: 600px) { .tabs-band { padding: 0 20px; } .tab { font-size: 17px; } .tabs-inner { gap: 24px; } }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ─── SHARED SECTION SHELL ─── */
+.section { padding: 56px 52px; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.sec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; gap: 16px; }
+.sec-link { font-size: 18px; font-weight: 500; color: var(--green); text-decoration: none; white-space: nowrap; }
+.sec-link:hover { text-decoration: underline; }
+@media (max-width: 600px) { .section { padding: 44px 20px; } }
+
+/* ─── VIDEOS ─── */
+.videos-section { background: var(--surface); }
+.vid-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.vid-card { background: var(--white); border: 1.5px solid var(--border-light); border-radius: 16px; overflow: hidden; cursor: pointer; transition: all .2s; display: flex; flex-direction: column; }
+.vid-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.vid-thumb { position: relative; height: 176px; display: flex; align-items: center; justify-content: center; }
+.vt-yt { background: #FFF0F0; } .vt-fb { background: #EEF4FF; } .vt-ig { background: #FFF0F5; }
+.vid-glyph { width: 56px; height: 56px; border-radius: 14px; background: rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; }
+.vid-glyph svg { width: 26px; height: 26px; fill: none; stroke: #9A9896; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vid-play { position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,.94); display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,.16); }
+.vid-play svg { width: 17px; height: 17px; fill: var(--green); stroke: none; margin-left: 2px; }
+.vid-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.vid-platform { font-size: 14px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+.vp-yt { color: #FF0000; } .vp-fb { color: #1877F2; } .vp-ig { color: #C13584; }
+.vid-body h3 { font-size: 20px; font-weight: 500; line-height: 1.35; flex: 1; }
+.vid-meta { display: flex; align-items: center; gap: 7px; font-size: 15px; color: var(--ink-muted); }
+.vid-meta svg { width: 16px; height: 16px; fill: none; stroke: var(--ink-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── ON-DEMAND COURSES ─── */
+.courses-section { background: var(--white); border-top: 1.5px solid var(--border); }
+.course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.course-card { background: var(--white); border: 1.5px solid var(--border-light); border-radius: 18px; overflow: hidden; transition: all .2s; display: flex; flex-direction: column; }
+.course-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.course-img { height: 160px; display: flex; align-items: center; justify-content: center; }
+.course-glyph { width: 60px; height: 60px; border-radius: 16px; background: rgba(255,255,255,.72); display: flex; align-items: center; justify-content: center; }
+.course-glyph svg { width: 28px; height: 28px; fill: none; stroke: #8C8A88; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.course-body { padding: 22px 24px 24px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.course-body h3 { font-size: 21px; font-weight: 500; line-height: 1.3; }
+.course-chapters { display: flex; align-items: center; gap: 8px; font-size: 16px; color: var(--ink-muted); }
+.course-chapters svg { width: 18px; height: 18px; fill: none; stroke: var(--green); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.course-progress { margin-top: 2px; }
+.course-prog-track { height: 6px; border-radius: 100px; background: var(--border-light); overflow: hidden; }
+.course-prog-fill { height: 100%; border-radius: 100px; background: var(--green); }
+.course-prog-label { font-size: 14px; color: var(--ink-muted); margin-top: 7px; }
+.btn-course {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 12px 24px; font-size: 16px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s; align-self: flex-start; margin-top: auto;
+}
+.btn-course:hover { background: var(--green-dark); }
+.btn-course svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── READ & LISTEN ─── */
+.read-section { background: var(--surface); border-top: 1.5px solid var(--border); }
+.read-list { display: flex; flex-direction: column; gap: 14px; }
+.read-item { background: var(--white); border: 1.5px solid var(--border-light); border-radius: 16px; padding: 24px 28px; display: flex; align-items: center; gap: 24px; transition: all .2s; }
+.read-item:hover { border-color: var(--border); box-shadow: 0 6px 20px rgba(0,0,0,.06); }
+.read-text { flex: 1; min-width: 0; }
+.read-text h3 { font-size: 21px; margin-bottom: 4px; }
+.read-text p { font-size: 17px; color: var(--ink-mid); line-height: 1.6; margin-bottom: 10px; }
+.read-meta { display: flex; align-items: center; gap: 7px; font-size: 15px; color: var(--ink-muted); }
+.read-meta svg { width: 16px; height: 16px; fill: none; stroke: var(--ink-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.read-actions { display: flex; gap: 10px; flex-shrink: 0; }
+.btn-read {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--green); color: white; border: 1.5px solid var(--green); border-radius: 100px;
+  padding: 12px 22px; font-size: 16px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.btn-read:hover { background: var(--green-dark); border-color: var(--green-dark); }
+.btn-read svg { width: 19px; height: 19px; fill: none; stroke: white; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.btn-listen {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: none; color: var(--green); border: 1.5px solid var(--border); border-radius: 100px;
+  padding: 12px 22px; font-size: 16px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.btn-listen:hover { border-color: var(--green); background: var(--green-light); }
+.btn-listen svg { width: 19px; height: 19px; fill: none; stroke: var(--green); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 560px) {
+  .read-item { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .read-actions { align-self: stretch; }
+  .btn-read, .btn-listen { flex: 1; justify-content: center; }
+}
+
+/* ─── LIVE CLASSES ─── */
+.classes-section { background: var(--surface); }
+.filter-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+.filter-btn {
+  font-size: 16px; font-weight: 500; padding: 9px 20px; border-radius: 100px;
+  border: 1.5px solid var(--border); color: var(--ink-mid); background: var(--white);
+  cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.filter-btn:hover { border-color: var(--green); color: var(--green); }
+.filter-btn.active { background: var(--green); color: white; border-color: var(--green); }
+.class-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.class-card { background: var(--white); border-radius: 18px; overflow: hidden; transition: all .2s; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+.class-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+.class-card.is-hidden { display: none; }
+.class-img { width: 100%; height: 180px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.class-glyph { width: 60px; height: 60px; border-radius: 16px; background: rgba(255,255,255,.72); display: flex; align-items: center; justify-content: center; }
+.class-glyph svg { width: 28px; height: 28px; fill: none; stroke: #8C8A88; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.class-body { padding: 20px 22px 14px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.class-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.class-meta-item { display: flex; align-items: center; gap: 6px; font-size: 16px; color: var(--ink-muted); }
+.class-meta-item svg { width: 17px; height: 17px; fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+.class-meta-dot { color: var(--border); }
+.class-body h4 { font-size: 22px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.class-desc { font-size: 17px; color: var(--ink-mid); line-height: 1.65; }
+.class-facilitator { display: flex; align-items: center; gap: 12px; padding: 14px 22px; border-top: 1px solid var(--border-light); margin-top: auto; }
+.fac-avatar { width: 44px; height: 44px; border-radius: 50%; background: #E0DEDD; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.fac-avatar svg { width: 22px; height: 22px; fill: none; stroke: #9A9896; stroke-width: 1.75; stroke-linecap: round; }
+.fac-info { display: flex; flex-direction: column; gap: 2px; }
+.fac-info span { font-size: 15px; color: var(--ink-muted); }
+.fac-info strong { font-size: 17px; font-weight: 500; color: var(--green); text-decoration: underline; text-underline-offset: 2px; }
+.class-foot { display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; border-top: 1px solid var(--border-light); }
+.class-type { font-size: 15px; font-weight: 500; padding: 5px 14px; border-radius: 100px; }
+.ct-on { background: var(--green-light); color: var(--green-dark); }
+.ct-ip { background: var(--terra-light); color: var(--terra-dark); }
+.class-link { font-size: 17px; font-weight: 500; color: var(--green); background: none; border: none; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 4px; }
+.class-link svg { width: 14px; height: 14px; fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; }
+
+/* ─── BOTTOM BANNER ─── */
+.learn-banner { background: var(--green-light); border-top: 1.5px solid var(--border); padding: 56px 52px; }
+.learn-banner-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; }
+.learn-banner h2 { color: var(--ink); margin-bottom: 8px; }
+.learn-banner p { font-size: 18px; color: var(--ink-mid); line-height: 1.7; max-width: 520px; }
+.btn-banner {
+  display: inline-flex; align-items: center; gap: 9px;
+  background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 16px 30px; font-size: 18px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s; white-space: nowrap; flex-shrink: 0;
+}
+.btn-banner:hover { background: var(--green-dark); }
+.btn-banner svg { width: 18px; height: 18px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ─── FOOTER ─── */
+footer { background: var(--white); border-top: 1.5px solid var(--border); padding: 26px 52px; display: flex; align-items: center; justify-content: space-between; }
+.footer-brand { display: flex; align-items: center; gap: 10px; }
+.footer-mark { width: 30px; height: 30px; border-radius: 8px; background: var(--green); display: flex; align-items: center; justify-content: center; }
+.footer-mark svg { width: 15px; height: 15px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+.footer-brand span { font-size: 15px; color: var(--ink-muted); }
+.footer-links { display: flex; gap: 26px; }
+.footer-links a { font-size: 15px; color: var(--ink-muted); text-decoration: none; transition: color .15s; }
+.footer-links a:hover { color: var(--green); }
+.footer-links a.hi { color: var(--green); font-weight: 500; }
+
+/* ─── RESPONSIVE GRIDS ─── */
+@media (max-width: 900px) {
+  .vid-grid, .course-grid, .class-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .vid-grid, .course-grid, .class-grid { grid-template-columns: 1fr; }
+  .learn-banner { padding: 44px 20px; }
+  .learn-banner-inner { grid-template-columns: 1fr; gap: 24px; }
+  .sec-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  footer { flex-direction: column; gap: 16px; padding: 26px 20px; text-align: center; }
+}
+
+/* ─── ANIMATION ─── */
+@keyframes up { from { opacity:0; transform:translateY(14px);} to { opacity:1; transform:none;} }
+.greet-top    { animation: up .45s ease .05s both; }
+.greet-sub    { animation: up .45s ease .12s both; }
+.greet-search { animation: up .45s ease .18s both; }
+.topic-row    { animation: up .45s ease .24s both; }
+
+/* ═══════════ PRACTICE (merged from Practice page) ═══════════ */
+.is-hidden { display: none !important; }
+
+.btn-primary { display: inline-flex; align-items: center; gap: 9px; background: var(--green); color: white; border: none; border-radius: 100px; padding: 14px 28px; font-size: 17px; font-weight: 500; cursor: pointer; font-family: inherit; transition: background .15s; }
+.btn-primary:hover { background: var(--green-dark); }
+.btn-primary svg { width: 17px; height: 17px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.btn-ghost-lg { display: inline-flex; align-items: center; gap: 9px; background: none; color: var(--ink-mid); border: 1.5px solid var(--border); border-radius: 100px; padding: 14px 26px; font-size: 17px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all .15s; }
+.btn-ghost-lg:hover { border-color: var(--green); color: var(--green); }
+
+/* section header for practice */
+.practice-section { background: var(--surface); border-top: 1.5px solid var(--border); }
+.practice-head { text-align: center; max-width: 720px; margin: 0 auto 40px; }
+.practice-eyebrow { display: inline-block; font-size: 15px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+.practice-head h2 { margin-bottom: 14px; }
+.practice-head p { font-size: 20px; color: var(--ink-mid); line-height: 1.7; }
+
+/* scenario grid */
+.sc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.sc-card { background: var(--white); border: 1.5px solid var(--border-light); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; transition: all .2s; }
+.sc-card:hover { border-color: var(--green); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+.sc-img { height: 158px; display: flex; align-items: center; justify-content: center; }
+.sc-glyph { width: 60px; height: 60px; border-radius: 16px; background: rgba(255,255,255,.72); display: flex; align-items: center; justify-content: center; }
+.sc-glyph svg { width: 28px; height: 28px; fill: none; stroke: #8C8A88; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.sc-body { padding: 22px 24px 24px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.sc-body h3 { font-size: 21px; font-weight: 500; line-height: 1.3; }
+.sc-body p { font-size: 17px; color: var(--ink-mid); line-height: 1.6; flex: 1; }
+.level-badge { align-self: flex-start; font-size: 14px; font-weight: 500; letter-spacing: .03em; padding: 4px 13px; border-radius: 100px; }
+.lvl-beg { background: var(--green-light); color: var(--green-dark); }
+.lvl-int { background: #FFF1E6; color: #A05A2A; }
+.sc-start { align-self: flex-start; margin-top: 4px; }
+
+/* practice flow */
+.flow-stage { max-width: 720px; margin: 0 auto; }
+.flow-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.card-back { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border); background: var(--white); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .15s; flex-shrink: 0; }
+.card-back:hover { border-color: var(--green); }
+.card-back svg { width: 18px; height: 18px; fill: none; stroke: var(--ink-mid); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.flow-scenario { font-size: 20px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.flow-progress-label { font-size: 15px; color: var(--ink-muted); }
+.flow-progress-track { height: 7px; border-radius: 100px; background: var(--border-light); overflow: hidden; margin-bottom: 26px; }
+.flow-progress-fill { height: 100%; border-radius: 100px; background: var(--green); transition: width .3s ease; }
+
+/* mock screen */
+.mock { border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden; background: var(--white); margin-bottom: 26px; }
+.mock-top { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border-light); background: var(--surface); }
+.mock-dots { display: flex; gap: 5px; }
+.mock-dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
+.mock-tag { font-size: 14px; font-weight: 500; letter-spacing: .03em; }
+.mt-yt { color: #FF0000; } .mt-fb { color: #1877F2; } .mt-ig { color: #C13584; } .mt-msg { color: var(--green); } .mt-mail { color: var(--ink-mid); } .mt-web { color: var(--ink-mid); }
+.mock-body { padding: 32px 26px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; min-height: 150px; justify-content: center; }
+.mock-glyph { width: 54px; height: 54px; border-radius: 14px; background: var(--surface); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.mock-glyph svg { width: 27px; height: 27px; fill: none; stroke: var(--ink-muted); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.mock-cap { font-size: 17px; color: var(--ink-mid); line-height: 1.55; max-width: 460px; }
+
+.flow-q { font-size: 22px; font-weight: 500; color: var(--ink); line-height: 1.4; margin-bottom: 18px; }
+.flow-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px; }
+.opt { display: flex; align-items: center; gap: 13px; text-align: left; width: 100%; background: var(--white); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 18px; font-size: 17px; color: var(--ink); cursor: pointer; font-family: inherit; line-height: 1.5; transition: all .15s; }
+.opt:hover { border-color: var(--green); }
+.opt-marker { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.opt-marker svg { width: 13px; height: 13px; fill: none; stroke: white; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.opt-correct { border-color: var(--green); background: var(--green-light); }
+.opt-correct .opt-marker { border-color: var(--green); background: var(--green); }
+.opt-correct .opt-marker svg { opacity: 1; }
+.opt-wrong { border-color: var(--amber-line); background: var(--amber-bg); }
+.opt-wrong .opt-marker { border-color: #D9A441; }
+.flow-options.locked .opt { cursor: default; }
+.flow-options.locked .opt:hover { border-color: var(--border); }
+.flow-options.locked .opt-correct:hover { border-color: var(--green); }
+
+.flow-feedback { display: flex; gap: 11px; align-items: flex-start; border-radius: 14px; padding: 16px 18px; font-size: 17px; line-height: 1.55; margin-bottom: 22px; }
+.flow-feedback svg { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.fb-success { background: var(--green-light); color: var(--green-dark); }
+.fb-success svg { stroke: var(--green-dark); }
+.fb-gentle { background: var(--amber-bg); color: var(--amber-ink); }
+.fb-gentle svg { stroke: #B07A25; }
+
+/* summary */
+.summary-check { width: 66px; height: 66px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.summary-check svg { width: 32px; height: 32px; fill: none; stroke: var(--green); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.flow-summary-h { text-align: center; margin-bottom: 26px; }
+.flow-summary-h h2 { margin-bottom: 4px; }
+.flow-summary-h p { font-size: 17px; color: var(--ink-muted); }
+.sum-block { background: var(--white); border: 1.5px solid var(--border-light); border-radius: 16px; padding: 22px 24px; margin-bottom: 16px; }
+.sum-label { font-size: 14px; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
+.sum-block > p { font-size: 18px; color: var(--ink); line-height: 1.6; }
+.sum-resources { display: flex; flex-direction: column; gap: 10px; }
+.sum-res { display: flex; align-items: center; gap: 11px; padding: 13px 16px; background: var(--surface); border: 1.5px solid var(--border-light); border-radius: 12px; text-decoration: none; color: var(--ink); font-size: 17px; transition: all .15s; }
+.sum-res:hover { border-color: var(--green); color: var(--green); background: var(--green-light); }
+.sum-res .lead { width: 20px; height: 20px; fill: none; stroke: var(--green); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.sum-res .chev { margin-left: auto; width: 16px; height: 16px; fill: none; stroke: var(--ink-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.sum-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 26px; }
+
+@media (max-width: 900px) { .sc-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) {
+  .sc-grid { grid-template-columns: 1fr; }
+  .flow-q { font-size: 20px; }
+  .practice-head p { font-size: 18px; }
+  .sum-actions { flex-direction: column; }
+  .sum-actions .btn-primary, .sum-actions .btn-ghost-lg { justify-content: center; }
+}
+#flow { animation: up .35s ease both; }
+
+/* ─── sign-in button + gated profile prompt ─── */
+.btn-ghost {
+  background: none; color: var(--ink-mid);
+  border: 1.5px solid var(--border); border-radius: 100px;
+  padding: 9px 20px; font-size: 16px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: all .15s; white-space: nowrap;
+}
+.btn-ghost:hover { border-color: var(--green); color: var(--green); }
+.greet-avatar.guest { background: var(--surface); border: 1.5px solid var(--border); }
+.greet-avatar.guest svg { width: 36px; height: 36px; fill: none; stroke: var(--ink-muted); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+.greet-guest-text { display: flex; flex-direction: column; gap: 10px; }
+.signin-prompt { font-size: 18px; color: var(--ink-mid); line-height: 1.5; display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 0; }
+.signin-link {
+  display: inline-flex; align-items: center;
+  background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 10px 22px; font-size: 16px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.signin-link:hover { background: var(--green-dark); }
+
+/* ─── LOGIN MODAL ─── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(26,26,26,.55);
+  display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white); border-radius: 22px;
+  padding: 40px 36px 36px; width: 100%; max-width: 440px;
+  position: relative; box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  animation: modalIn .22s ease;
+}
+@keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+.modal-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 42px; height: 42px; border-radius: 50%;
+  border: none; background: var(--surface); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; transition: background .15s;
+}
+.modal-close:hover { background: var(--border-light); }
+.modal-close svg { width: 20px; height: 20px; fill: none; stroke: var(--ink-mid); stroke-width: 2.2; stroke-linecap: round; }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.5px; }
+.modal-sub { font-size: 16px; color: var(--ink-mid); line-height: 1.5; margin-bottom: 26px; }
+.modal-form { display: flex; flex-direction: column; }
+.modal-label { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 7px; }
+.modal-input {
+  font-family: inherit; font-size: 17px; color: var(--ink);
+  padding: 14px 16px; border: 2px solid var(--border); border-radius: 12px;
+  background: var(--white); margin-bottom: 18px; transition: border-color .15s;
+}
+.modal-input:focus { outline: none; border-color: var(--green); }
+.modal-input::placeholder { color: var(--ink-muted); }
+.modal-submit {
+  margin-top: 6px; width: 100%;
+  background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 15px; font-size: 18px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.modal-submit:hover { background: var(--green-dark); }
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg>
+    </div>
+    <span class="nav-logo-name">Algorithm Literacy Hub</span>
+  </a>
+  <nav class="nav-links" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <div class="nav-item has-dropdown">
+      <a href="learn.html" class="active" aria-current="page">Learn
+        <svg class="caret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </a>
+      <div class="dropdown" role="menu" aria-label="Learn">
+        <a class="dropdown-link" role="menuitem" href="learn.html#self">
+          <strong>Self-paced</strong>
+          <span>Videos, courses &amp; articles at your own pace</span>
+        </a>
+        <a class="dropdown-link" role="menuitem" href="learn.html#live">
+          <strong>Live classes</strong>
+          <span>Join a class online or near you</span>
+        </a>
+        <a class="dropdown-link" role="menuitem" href="learn.html#practice">
+          <strong>Practice</strong>
+          <span>Try safe, hands-on exercises</span>
+        </a>
+      </div>
+    </div>
+    <a href="get-help.html">Get help</a>
+  </nav>
+  <div class="nav-right">
+    <button class="btn-ghost" data-auth="out" onclick="openLoginModal()">Sign in</button>
+    <a class="nav-avatar is-hidden" data-auth="in" href="profile.html" aria-label="My profile">MC</a>
+    <button class="btn-terra" onclick="location.href='get-help.html#find-help-near-you'">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      Find help near you
+    </button>
+  </div>
+</nav>
+
+<!-- GREETING HERO -->
+<section class="greet">
+  <div class="greet-inner">
+    <!-- signed-out: profile is gated, course content below stays open -->
+    <div class="greet-top" data-auth="out">
+      <div class="greet-avatar guest" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="greet-guest-text">
+        <h1 class="greet-title">Learn at your own pace</h1>
+        <p class="signin-prompt">Sign in to save your progress and see your saved courses.
+          <button class="signin-link" onclick="openLoginModal()">Sign in</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- signed-in: personalized greeting -->
+    <div class="greet-top is-hidden" data-auth="in">
+      <div class="greet-avatar">MC</div>
+      <h1 class="greet-title">Good morning, Maria</h1>
+    </div>
+
+    <p class="greet-sub">What would you like to learn today?</p>
+
+    <div class="greet-search">
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search lessons — e.g. targeted ads" aria-label="Search lessons">
+      </div>
+    </div>
+
+    <div class="topic-row">
+      <span class="topic-label">Popular topics:</span>
+      <div class="chips">
+        <button class="chip">Targeted ads</button>
+        <button class="chip">Recommended videos</button>
+        <button class="chip">Privacy &amp; your data</button>
+        <button class="chip">Spotting scams</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TABS -->
+<div class="tabs-band">
+  <div class="tabs-inner">
+    <button class="tab active" id="tab-self" onclick="showTab('self')">Self-paced</button>
+    <button class="tab" id="tab-live" onclick="showTab('live')">Live classes</button>
+    <button class="tab" id="tab-practice" onclick="showTab('practice')">Practice</button>
+  </div>
+</div>
+
+<!-- ════════ TAB 1 · SELF-PACED ════════ -->
+<div class="tab-panel active" id="panel-self">
+
+  <!-- VIDEOS -->
+  <section class="section videos-section">
+    <div class="section-inner">
+      <div class="sec-head">
+        <h2>Videos</h2>
+        <a href="#" class="sec-link">See all videos →</a>
+      </div>
+      <div class="vid-grid">
+
+        <div class="vid-card">
+          <div class="vid-thumb vt-yt">
+            <span class="vid-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+            <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="vid-body">
+            <span class="vid-platform vp-yt">YouTube</span>
+            <h3>Why the same kind of video keeps coming up</h3>
+            <span class="vid-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 4:12</span>
+          </div>
+        </div>
+
+        <div class="vid-card">
+          <div class="vid-thumb vt-fb">
+            <span class="vid-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+            <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="vid-body">
+            <span class="vid-platform vp-fb">Facebook</span>
+            <h3>Where the posts in your feed come from</h3>
+            <span class="vid-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 3:40</span>
+          </div>
+        </div>
+
+        <div class="vid-card">
+          <div class="vid-thumb vt-ig">
+            <span class="vid-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+            <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="vid-body">
+            <span class="vid-platform vp-ig">Instagram</span>
+            <h3>Why people you don't follow show up</h3>
+            <span class="vid-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 2:55</span>
+          </div>
+        </div>
+
+        <div class="vid-card">
+          <div class="vid-thumb vt-yt">
+            <span class="vid-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+            <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="vid-body">
+            <span class="vid-platform vp-yt">YouTube</span>
+            <h3>Skip, don't just scroll: training your feed</h3>
+            <span class="vid-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 5:01</span>
+          </div>
+        </div>
+
+        <div class="vid-card">
+          <div class="vid-thumb vt-fb">
+            <span class="vid-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+            <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="vid-body">
+            <span class="vid-platform vp-fb">Facebook</span>
+            <h3>Ads that feel like they read your mind</h3>
+            <span class="vid-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 4:30</span>
+          </div>
+        </div>
+
+        <div class="vid-card">
+          <div class="vid-thumb vt-ig">
+            <span class="vid-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span>
+            <span class="vid-play"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg></span>
+          </div>
+          <div class="vid-body">
+            <span class="vid-platform vp-ig">Instagram</span>
+            <h3>What "Suggested for you" really means</h3>
+            <span class="vid-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 3:20</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ON-DEMAND COURSES -->
+  <section class="section courses-section">
+    <div class="section-inner">
+      <div class="sec-head">
+        <h2>On-demand <em>courses</em></h2>
+        <a href="#" class="sec-link">See all courses →</a>
+      </div>
+      <div class="course-grid">
+
+        <div class="course-card">
+          <div class="course-img" style="background:#FDECEA">
+            <span class="course-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          </div>
+          <div class="course-body">
+            <h3>Why you see the ads you see</h3>
+            <span class="course-chapters"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 4 chapters</span>
+            <div class="course-progress">
+              <div class="course-prog-track"><div class="course-prog-fill" style="width:50%"></div></div>
+              <div class="course-prog-label">2 of 4 chapters complete</div>
+            </div>
+            <button class="btn-course">Resume <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-img" style="background:#FCECEA">
+            <span class="course-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          </div>
+          <div class="course-body">
+            <h3>Taking control of your video feed</h3>
+            <span class="course-chapters"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 3 chapters</span>
+            <div class="course-progress">
+              <div class="course-prog-track"><div class="course-prog-fill" style="width:33%"></div></div>
+              <div class="course-prog-label">1 of 3 chapters complete</div>
+            </div>
+            <button class="btn-course">Resume <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-img" style="background:#EEF4FF">
+            <span class="course-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          </div>
+          <div class="course-body">
+            <h3>Protecting your privacy online</h3>
+            <span class="course-chapters"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 6 chapters</span>
+            <button class="btn-course"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start</button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-img" style="background:#FFF0F5">
+            <span class="course-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          </div>
+          <div class="course-body">
+            <h3>Social media, made simple</h3>
+            <span class="course-chapters"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 5 chapters</span>
+            <button class="btn-course"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start</button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-img" style="background:#FDECEA">
+            <span class="course-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          </div>
+          <div class="course-body">
+            <h3>Spotting scams &amp; fake offers</h3>
+            <span class="course-chapters"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 4 chapters</span>
+            <button class="btn-course"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start</button>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-img" style="background:#F0F7F0">
+            <span class="course-glyph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          </div>
+          <div class="course-body">
+            <h3>What is an algorithm, really?</h3>
+            <span class="course-chapters"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> 3 chapters</span>
+            <button class="btn-course"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- READ & LISTEN -->
+  <section class="section read-section">
+    <div class="section-inner">
+      <div class="sec-head">
+        <h2>Read &amp; <em>listen</em></h2>
+        <a href="#" class="sec-link">See all articles →</a>
+      </div>
+      <div class="read-list">
+
+        <div class="read-item">
+          <div class="read-text">
+            <h3>A plain-language guide to your privacy settings</h3>
+            <p>Walk through the handful of settings that make the biggest difference — with screenshots for each step.</p>
+            <span class="read-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 6 min read</span>
+          </div>
+          <div class="read-actions">
+            <button class="btn-read"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Read</button>
+            <button class="btn-listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h3zM3 19a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3z"/></svg> Listen</button>
+          </div>
+        </div>
+
+        <div class="read-item">
+          <div class="read-text">
+            <h3>How to tell a real offer from a scam</h3>
+            <p>Five simple questions to ask before you click, reply, or share any personal details online.</p>
+            <span class="read-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 4 min read</span>
+          </div>
+          <div class="read-actions">
+            <button class="btn-read"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Read</button>
+            <button class="btn-listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h3zM3 19a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3z"/></svg> Listen</button>
+          </div>
+        </div>
+
+        <div class="read-item">
+          <div class="read-text">
+            <h3>Why your feed knows what you like</h3>
+            <p>A friendly explainer on how recommendations work behind the scenes — no jargon, just clear examples.</p>
+            <span class="read-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 7 min read</span>
+          </div>
+          <div class="read-actions">
+            <button class="btn-read"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Read</button>
+            <button class="btn-listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h3zM3 19a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3z"/></svg> Listen</button>
+          </div>
+        </div>
+
+        <div class="read-item">
+          <div class="read-text">
+            <h3>Taking a break: how to reset your recommendations</h3>
+            <p>Feeling like your feed is stuck? Here's how to clear it out and start fresh in just a few taps.</p>
+            <span class="read-meta"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 5 min read</span>
+          </div>
+          <div class="read-actions">
+            <button class="btn-read"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Read</button>
+            <button class="btn-listen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h3zM3 19a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3z"/></svg> Listen</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</div><!-- /panel-self -->
+
+<!-- ════════ TAB 2 · LIVE CLASSES ════════ -->
+<div class="tab-panel" id="panel-live">
+  <section class="section classes-section">
+    <div class="section-inner">
+      <div class="sec-head">
+        <h2>Upcoming <em>classes</em></h2>
+        <a href="#" class="sec-link">See full schedule →</a>
+      </div>
+
+      <div class="filter-row" role="group" aria-label="Filter classes">
+        <button class="filter-btn active" onclick="filterClasses('all', this)">All</button>
+        <button class="filter-btn" onclick="filterClasses('online', this)">Online</button>
+        <button class="filter-btn" onclick="filterClasses('inperson', this)">In person</button>
+      </div>
+
+      <div class="class-grid">
+
+        <div class="class-card" data-type="online">
+          <div class="class-img" style="background:#FDECEA"><span class="class-glyph"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+          <div class="class-body">
+            <div class="class-meta">
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Thu, Sep 24</span>
+              <span class="class-meta-dot">·</span>
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 2:00 PM</span>
+            </div>
+            <h4>How your feed really works</h4>
+            <p class="class-desc">A friendly walkthrough of recommendations, with time for your questions.</p>
+          </div>
+          <div class="class-facilitator">
+            <div class="fac-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+            <div class="fac-info"><span>Facilitator:</span><strong>Robert James</strong></div>
+          </div>
+          <div class="class-foot">
+            <span class="class-type ct-on">Online</span>
+            <button class="class-link">Sign up free <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="class-card" data-type="inperson">
+          <div class="class-img" style="background:#EEF4FF"><span class="class-glyph"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+          <div class="class-body">
+            <div class="class-meta">
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Fri, Sep 25</span>
+              <span class="class-meta-dot">·</span>
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 10:30 AM</span>
+            </div>
+            <h4>Ads, data &amp; your privacy</h4>
+            <p class="class-desc">What apps know about you — and the settings that protect you.</p>
+          </div>
+          <div class="class-facilitator">
+            <div class="fac-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+            <div class="fac-info"><span>Facilitator:</span><strong>Angela Smith</strong></div>
+          </div>
+          <div class="class-foot">
+            <span class="class-type ct-ip">In person</span>
+            <button class="class-link">Reserve a spot <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="class-card" data-type="online">
+          <div class="class-img" style="background:#FFF0F5"><span class="class-glyph"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+          <div class="class-body">
+            <div class="class-meta">
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Tue, Sep 29</span>
+              <span class="class-meta-dot">·</span>
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 1:00 PM</span>
+            </div>
+            <h4>Spotting scams &amp; fake offers</h4>
+            <p class="class-desc">Learn the warning signs and what to do before you click or reply.</p>
+          </div>
+          <div class="class-facilitator">
+            <div class="fac-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+            <div class="fac-info"><span>Facilitator:</span><strong>Maria Lopez</strong></div>
+          </div>
+          <div class="class-foot">
+            <span class="class-type ct-on">Online</span>
+            <button class="class-link">Sign up free <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="class-card" data-type="inperson">
+          <div class="class-img" style="background:#F0F7F0"><span class="class-glyph"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+          <div class="class-body">
+            <div class="class-meta">
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Wed, Sep 30</span>
+              <span class="class-meta-dot">·</span>
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 3:30 PM</span>
+            </div>
+            <h4>Getting started with smartphones</h4>
+            <p class="class-desc">A relaxed, hands-on session covering the basics at your own pace.</p>
+          </div>
+          <div class="class-facilitator">
+            <div class="fac-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+            <div class="fac-info"><span>Facilitator:</span><strong>David Chen</strong></div>
+          </div>
+          <div class="class-foot">
+            <span class="class-type ct-ip">In person</span>
+            <button class="class-link">Reserve a spot <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="class-card" data-type="online">
+          <div class="class-img" style="background:#FCECEA"><span class="class-glyph"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+          <div class="class-body">
+            <div class="class-meta">
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Thu, Oct 1</span>
+              <span class="class-meta-dot">·</span>
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 11:00 AM</span>
+            </div>
+            <h4>Taking control of your video feed</h4>
+            <p class="class-desc">Simple habits that reshape what YouTube recommends to you.</p>
+          </div>
+          <div class="class-facilitator">
+            <div class="fac-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+            <div class="fac-info"><span>Facilitator:</span><strong>Sarah Park</strong></div>
+          </div>
+          <div class="class-foot">
+            <span class="class-type ct-on">Online</span>
+            <button class="class-link">Sign up free <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="class-card" data-type="inperson">
+          <div class="class-img" style="background:#FDECEA"><span class="class-glyph"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+          <div class="class-body">
+            <div class="class-meta">
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Fri, Oct 2</span>
+              <span class="class-meta-dot">·</span>
+              <span class="class-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 2:00 PM</span>
+            </div>
+            <h4>Staying safe on social media</h4>
+            <p class="class-desc">Privacy settings, blocking, and reporting — explained step by step.</p>
+          </div>
+          <div class="class-facilitator">
+            <div class="fac-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+            <div class="fac-info"><span>Facilitator:</span><strong>Linda Brown</strong></div>
+          </div>
+          <div class="class-foot">
+            <span class="class-type ct-ip">In person</span>
+            <button class="class-link">Reserve a spot <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div><!-- /panel-live -->
+
+<!-- ════════ TAB 3 · PRACTICE ════════ -->
+<div class="tab-panel" id="panel-practice">
+<section class="section practice-section" id="practice">
+  <div class="section-inner">
+
+    <div class="practice-head">
+      <span class="practice-eyebrow">Now try it yourself</span>
+      <h2>Put it into <em>practice</em></h2>
+      <p>You've learned how it works — now try it in real situations here. Nothing you do affects your real accounts.</p>
+    </div>
+
+    <!-- BROWSE VIEW -->
+    <div id="browseView">
+      <div class="sc-grid">
+
+        <div class="sc-card">
+          <div class="sc-img" style="background:#FDECEA"><span class="sc-glyph"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span></div>
+          <div class="sc-body">
+            <span class="level-badge lvl-beg">Beginner</span>
+            <h3>Someone sent you a suspicious link</h3>
+            <p>A surprise link lands in your messages. Practice deciding what to do.</p>
+            <button class="btn-primary sc-start" onclick="openPractice('suspicious-link')">Start practice <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="sc-card">
+          <div class="sc-img" style="background:#FFF0F0"><span class="sc-glyph"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/></svg></span></div>
+          <div class="sc-body">
+            <span class="level-badge lvl-beg">Beginner</span>
+            <h3>Your YouTube feed is showing things you don't like</h3>
+            <p>Unwanted videos keep showing up. Practice steering your feed.</p>
+            <button class="btn-primary sc-start" onclick="openPractice('youtube-feed')">Start practice <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="sc-card">
+          <div class="sc-img" style="background:#EEF4FF"><span class="sc-glyph"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></div>
+          <div class="sc-body">
+            <span class="level-badge lvl-int">Intermediate</span>
+            <h3>You think someone is trying to access your Facebook account</h3>
+            <p>A login alert appears. Practice keeping your account secure.</p>
+            <button class="btn-primary sc-start" onclick="openPractice('facebook-access')">Start practice <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="sc-card">
+          <div class="sc-img" style="background:#FCECEA"><span class="sc-glyph"><svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></span></div>
+          <div class="sc-body">
+            <span class="level-badge lvl-beg">Beginner</span>
+            <h3>You saw an ad that followed you from one website to another</h3>
+            <p>The same product follows you around the web. Practice understanding why.</p>
+            <button class="btn-primary sc-start" onclick="openPractice('retargeting-ad')">Start practice <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="sc-card">
+          <div class="sc-img" style="background:#FFF7E8"><span class="sc-glyph"><svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span></div>
+          <div class="sc-body">
+            <span class="level-badge lvl-int">Intermediate</span>
+            <h3>A post on Facebook looks like it might be fake news</h3>
+            <p>A dramatic headline is going viral. Practice checking before you share.</p>
+            <button class="btn-primary sc-start" onclick="openPractice('fake-news')">Start practice <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+        <div class="sc-card">
+          <div class="sc-img" style="background:#FFF0F5"><span class="sc-glyph"><svg viewBox="0 0 24 24"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span></div>
+          <div class="sc-body">
+            <span class="level-badge lvl-beg">Beginner</span>
+            <h3>Your Instagram is showing too many ads</h3>
+            <p>Ads are taking over your feed. Practice cutting them down.</p>
+            <button class="btn-primary sc-start" onclick="openPractice('instagram-ads')">Start practice <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FLOW VIEW -->
+    <div id="flowView" class="is-hidden">
+      <div class="flow-stage">
+        <div id="flow"></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</div><!-- /panel-practice -->
+
+<!-- BOTTOM BANNER -->
+<section class="learn-banner">
+  <div class="learn-banner-inner">
+    <div>
+      <h2>Need one-on-one help?</h2>
+      <p>Book a session with a real person.</p>
+    </div>
+    <button class="btn-banner" onclick="location.href='get-help.html'">
+      Go to Get help
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="footer-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg></div>
+    <span>Algorithm Literacy Hub · A free community resource</span>
+  </div>
+  <div class="footer-links">
+    <a href="#" class="hi">Find a class</a>
+    <a href="#">For families &amp; friends</a>
+    <a href="#">For educators</a>
+    <a href="#">About</a>
+  </div>
+</footer>
+
+<script>
+function showTab(which) {
+  ['self', 'live', 'practice'].forEach(function(name) {
+    var active = (name === which);
+    var panel = document.getElementById('panel-' + name);
+    var tab = document.getElementById('tab-' + name);
+    if (panel) panel.classList.toggle('active', active);
+    if (tab) tab.classList.toggle('active', active);
+  });
+}
+/* Deep-link support: nav dropdown links (#self / #live / #practice) open the right tab */
+function applyLearnHash() {
+  var h = (location.hash || '').toLowerCase();
+  if (h.indexOf('#practice-') === 0) {
+    showTab('practice');
+    openPractice(h.slice('#practice-'.length));
+  }
+  else if (h === '#live') { showTab('live'); }
+  else if (h === '#self') { showTab('self'); }
+  else if (h === '#practice') { showTab('practice'); }
+}
+window.addEventListener('DOMContentLoaded', applyLearnHash);
+window.addEventListener('hashchange', applyLearnHash);
+function filterClasses(type, btn) {
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.class-card').forEach(function(card){
+    var show = (type === 'all') || (card.getAttribute('data-type') === type);
+    card.classList.toggle('is-hidden', !show);
+  });
+}
+
+/* ═══════════ PRACTICE FLOW (merged from Practice page) ═══════════ */
+/* scroll to the practice section top, allowing for the sticky nav */
+function scrollToPractice() {
+  var el = document.getElementById('practice');
+  if (!el) return;
+  var y = el.getBoundingClientRect().top + window.pageYOffset - 84;
+  window.scrollTo(0, y);
+}
+
+/* ─── ICONS ─── */
+var ICON = {
+  link:  '<path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  play:  '<rect x="2" y="5" width="20" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/>',
+  lock:  '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  mail:  '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/>',
+  tag:   '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>',
+  alert: '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  ad:    '<path d="M3 11l18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  book:  '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>'
+};
+
+/* ─── SCENARIO DATA ─── */
+var SCENARIOS = [
+  {
+    id: 'suspicious-link',
+    title: 'Someone sent you a suspicious link',
+    steps: [
+      { tag: 'Messages', cls: 'mt-msg', icon: 'link',
+        cap: '"You\'ve won a $500 gift card! Claim it here: bit.ly/wln-prize"',
+        q: 'A friend messages you this out of the blue. What\'s your first move?',
+        options: [
+          { t: 'Tap the link to see what it is', correct: false, fb: 'It\'s safest not to tap links you weren\'t expecting — they can lead to fake sites. Try another option.' },
+          { t: 'Check with your friend first to see if they really sent it', correct: true, fb: 'Exactly! Accounts get hacked, so confirming with your friend is a smart first step.' },
+          { t: 'Reply with your details to claim the prize', correct: false, fb: 'Hold on — real prizes never ask for your details this way. Let\'s pick a safer option.' }
+        ] },
+      { tag: 'Web page', cls: 'mt-web', icon: 'lock',
+        cap: 'A page that looks like a login screen is asking for your password.',
+        q: 'You tapped by accident and landed here. What now?',
+        options: [
+          { t: 'Type your password — it looks like the real site', correct: false, fb: 'Look closely — copycat pages are made to look real. Best not to enter anything here.' },
+          { t: 'Close the page without entering anything', correct: true, fb: 'Yes! Closing it keeps your details safe.' }
+        ] },
+      { tag: 'Messages', cls: 'mt-msg', icon: 'link',
+        cap: 'You\'re back to your normal messages, safe and sound.',
+        q: 'What\'s a good habit to carry forward?',
+        options: [
+          { t: 'Pause before tapping links you didn\'t expect', correct: true, fb: 'That\'s the one — a short pause prevents most scams.' },
+          { t: 'Tap fast so you don\'t miss out', correct: false, fb: 'Urgency is a scam\'s favourite trick. Slowing down keeps you safer.' }
+        ] }
+    ],
+    learned: 'Unexpected links can be traps — pause, check with the sender, and never enter your password on a page you reached from a surprise link.',
+    resources: [ 'How to tell a real offer from a scam', 'A plain-language guide to your privacy settings' ]
+  },
+  {
+    id: 'youtube-feed',
+    title: 'Your YouTube feed is showing things you don\'t like',
+    steps: [
+      { tag: 'YouTube', cls: 'mt-yt', icon: 'play',
+        cap: 'An unwanted video keeps appearing at the top of your feed.',
+        q: 'What\'s the most direct way to see less of it?',
+        options: [
+          { t: 'Tap the ⋮ menu and choose "Not interested"', correct: true, fb: 'Exactly — this tells YouTube to show less like it.' },
+          { t: 'Just scroll past it every time', correct: false, fb: 'Scrolling past doesn\'t teach your feed much. There\'s a more direct way.' },
+          { t: 'Watch it fully so it goes away', correct: false, fb: 'Watching actually signals you like it — that brings more of the same.' }
+        ] },
+      { tag: 'YouTube', cls: 'mt-yt', icon: 'play',
+        cap: 'YouTube asks: "Tell us more — why don\'t you want this?"',
+        q: 'Which choice gives the clearest signal?',
+        options: [
+          { t: 'Choose "Don\'t recommend this channel"', correct: true, fb: 'Great — that\'s a strong, clear signal.' },
+          { t: 'Close the box without choosing', correct: false, fb: 'Giving a reason helps your feed learn faster. Try picking one.' }
+        ] },
+      { tag: 'YouTube', cls: 'mt-yt', icon: 'play',
+        cap: 'Your feed is starting to look more like what you enjoy.',
+        q: 'What shapes your feed the most over time?',
+        options: [
+          { t: 'What you watch, like, and search for', correct: true, fb: 'Right — your actions are the biggest signal.' },
+          { t: 'The time of day you log in', correct: false, fb: 'Not really — it\'s mostly what you watch and search that counts.' }
+        ] }
+    ],
+    learned: 'Your feed learns from what you do — use "Not interested" and "Don\'t recommend this channel" to steer it toward what you actually want.',
+    resources: [ 'Taking control of your video feed', 'Why your feed knows what you like' ]
+  },
+  {
+    id: 'facebook-access',
+    title: 'You think someone is trying to access your Facebook account',
+    steps: [
+      { tag: 'Email', cls: 'mt-mail', icon: 'mail',
+        cap: 'Alert: "New login to your account from a device in another city."',
+        q: 'You get this alert. What\'s the safest first step?',
+        options: [
+          { t: 'Ignore it — probably nothing', correct: false, fb: 'It\'s worth checking — alerts like this can be real. Let\'s act on it.' },
+          { t: 'Open Facebook directly and check recent logins', correct: true, fb: 'Good — going to the app yourself (not via the email link) is the safe way to check.' },
+          { t: 'Click the link in the email to log in', correct: false, fb: 'Careful — links in alert emails can be fake. Open the app directly instead.' }
+        ] },
+      { tag: 'Facebook', cls: 'mt-fb', icon: 'lock',
+        cap: 'In Security settings you see an unfamiliar device logged in.',
+        q: 'What do you do about it?',
+        options: [
+          { t: 'Log it out and change your password', correct: true, fb: 'Exactly — remove the device and set a new, strong password.' },
+          { t: 'Leave it and hope it logs out on its own', correct: false, fb: 'Best not to wait — log it out and change your password to be safe.' }
+        ] },
+      { tag: 'Facebook', cls: 'mt-fb', icon: 'lock',
+        cap: 'Your account is secure again. Facebook offers extra protection.',
+        q: 'What adds the strongest protection for next time?',
+        options: [
+          { t: 'Turn on two-factor authentication', correct: true, fb: 'Yes — a second step makes it much harder for anyone else to get in.' },
+          { t: 'Use the same password everywhere so you remember it', correct: false, fb: 'That actually makes things riskier. A unique password plus two-factor is much safer.' }
+        ] }
+    ],
+    learned: 'If you suspect someone\'s in your account: check logins from the app itself, log out unknown devices, change your password, and turn on two-factor authentication.',
+    resources: [ 'A plain-language guide to your privacy settings', 'Protecting your privacy online' ]
+  },
+  {
+    id: 'retargeting-ad',
+    title: 'You saw an ad that followed you from one website to another',
+    steps: [
+      { tag: 'Web page', cls: 'mt-web', icon: 'tag',
+        cap: 'The shoes you looked at yesterday are now in ads on every site.',
+        q: 'Why is this happening?',
+        options: [
+          { t: 'Your browsing is shared with advertisers to show related ads', correct: true, fb: 'Right — this is called "retargeting".' },
+          { t: 'Your phone is secretly listening to your conversations', correct: false, fb: 'It can feel that way, but it\'s usually your browsing activity, not listening.' },
+          { t: 'It\'s just a coincidence', correct: false, fb: 'Not quite — this is a deliberate technique called retargeting.' }
+        ] },
+      { tag: 'Settings', cls: 'mt-web', icon: 'tag',
+        cap: 'You open your account\'s Ad settings page.',
+        q: 'What actually helps reduce these ads?',
+        options: [
+          { t: 'Turn down ad personalization and limit ad tracking', correct: true, fb: 'Yes — ad settings let you make ads less based on your activity.' },
+          { t: 'Buy the shoes so the ads stop', correct: false, fb: 'They often keep going anyway — adjusting your ad settings is the real fix.' }
+        ] },
+      { tag: 'Settings', cls: 'mt-web', icon: 'tag',
+        cap: 'You\'ve turned off ad personalization.',
+        q: 'What does that actually change?',
+        options: [
+          { t: 'You\'ll still see ads, just less targeted to you', correct: true, fb: 'Exactly — ads don\'t disappear, but they\'re less based on your activity.' },
+          { t: 'You\'ll never see any ads again', correct: false, fb: 'Not quite — ads remain, but they become less personalized.' }
+        ] }
+    ],
+    learned: 'Ads that follow you are "retargeting" based on your browsing — you can\'t remove ads, but you can make them far less personal in your ad settings.',
+    resources: [ 'Why you see the ads you see', 'A plain-language guide to your privacy settings' ]
+  },
+  {
+    id: 'fake-news',
+    title: 'A post on Facebook looks like it might be fake news',
+    steps: [
+      { tag: 'Facebook', cls: 'mt-fb', icon: 'alert',
+        cap: '"SHOCKING! Doctors don\'t want you to know this one trick…" — 40k shares.',
+        q: 'A dramatic headline is getting lots of shares. What\'s your first check?',
+        options: [
+          { t: 'Look at who posted it and whether it\'s a known source', correct: true, fb: 'Good instinct — the source tells you a lot.' },
+          { t: 'Share it so others can decide for themselves', correct: false, fb: 'Best to check before sharing — sharing spreads it even if it turns out false.' },
+          { t: 'Trust it because so many people shared it', correct: false, fb: 'Lots of shares doesn\'t mean it\'s true. Let\'s verify first.' }
+        ] },
+      { tag: 'Web search', cls: 'mt-web', icon: 'alert',
+        cap: 'The source is a site you\'ve never heard of.',
+        q: 'What do you do next?',
+        options: [
+          { t: 'See if trusted news outlets report the same thing', correct: true, fb: 'Exactly — if no reliable outlet covers it, be skeptical.' },
+          { t: 'Read only the headline and move on', correct: false, fb: 'Headlines can mislead — checking other sources is safer.' }
+        ] },
+      { tag: 'Facebook', cls: 'mt-fb', icon: 'alert',
+        cap: 'It turns out the claim is misleading.',
+        q: 'What\'s the best thing to do?',
+        options: [
+          { t: 'Don\'t share it — and you can report it', correct: true, fb: 'Yes — not sharing stops it spreading, and reporting helps others.' },
+          { t: 'Share it with a warning so people know', correct: false, fb: 'Even with a warning, sharing boosts it. Better not to share at all.' }
+        ] }
+    ],
+    learned: 'Before believing or sharing, check the source and see if trusted outlets report the same — and don\'t share what you can\'t verify.',
+    resources: [ 'Spotting misinformation online', 'How to tell a real offer from a scam' ]
+  },
+  {
+    id: 'instagram-ads',
+    title: 'Your Instagram is showing too many ads',
+    steps: [
+      { tag: 'Instagram', cls: 'mt-ig', icon: 'ad',
+        cap: 'Every few posts in your feed is a sponsored ad.',
+        q: 'What\'s a useful first step?',
+        options: [
+          { t: 'On an ad, tap ⋯ and choose "Hide ad"', correct: true, fb: 'Good — that tells Instagram you\'d rather not see it.' },
+          { t: 'Report your friends\' posts', correct: false, fb: 'That won\'t help with ads — focus on the ad\'s own menu instead.' }
+        ] },
+      { tag: 'Instagram', cls: 'mt-ig', icon: 'ad',
+        cap: 'Instagram asks why you hid the ad.',
+        q: 'Which response helps most?',
+        options: [
+          { t: 'Pick a reason, like "It\'s repetitive"', correct: true, fb: 'Great — a reason helps it show fewer like that one.' },
+          { t: 'Skip without answering', correct: false, fb: 'Giving a reason helps it learn. Try choosing one.' }
+        ] },
+      { tag: 'Settings', cls: 'mt-ig', icon: 'ad',
+        cap: 'You open your Instagram ad preferences.',
+        q: 'What else reduces tailored ads?',
+        options: [
+          { t: 'Review and limit your ad preferences in settings', correct: true, fb: 'Yes — settings let you limit how ads are personalized.' },
+          { t: 'Post more often yourself', correct: false, fb: 'Posting more doesn\'t reduce ads — your ad settings are the place to look.' }
+        ] }
+    ],
+    learned: 'You can\'t remove ads entirely, but "Hide ad" plus your ad preferences make them fewer and less tailored to you.',
+    resources: [ 'Why you see the ads you see', 'Protecting your privacy online' ]
+  }
+];
+
+/* ─── STATE & RENDERING ─── */
+var current = null, stepIdx = 0;
+
+function svg(paths, extra) {
+  return '<svg viewBox="0 0 24 24" aria-hidden="true" ' + (extra||'') + '>' + paths + '</svg>';
+}
+function scenarioIndex(id) {
+  for (var i = 0; i < SCENARIOS.length; i++) { if (SCENARIOS[i].id === id) return i; }
+  return 0;
+}
+
+function openPractice(id) {
+  current = SCENARIOS[scenarioIndex(id)];
+  stepIdx = 0;
+  document.getElementById('browseView').classList.add('is-hidden');
+  document.getElementById('flowView').classList.remove('is-hidden');
+  renderStep();
+  scrollToPractice();
+}
+
+function backToAll() {
+  document.getElementById('flowView').classList.add('is-hidden');
+  document.getElementById('browseView').classList.remove('is-hidden');
+  scrollToPractice();
+}
+
+function renderStep() {
+  var s = current, step = s.steps[stepIdx];
+  var total = s.steps.length;
+  var pct = Math.round((stepIdx / total) * 100);
+  var h = '';
+  h += '<div class="flow-head">';
+  h += '  <button class="card-back" onclick="backToAll()" aria-label="Back to all practices">' + svg('<path d="M19 12H5M12 19l-7-7 7-7"/>') + '</button>';
+  h += '  <div><div class="flow-scenario">' + s.title + '</div><div class="flow-progress-label">Step ' + (stepIdx + 1) + ' of ' + total + '</div></div>';
+  h += '</div>';
+  h += '<div class="flow-progress-track"><div class="flow-progress-fill" style="width:' + pct + '%"></div></div>';
+
+  /* mock */
+  h += '<div class="mock"><div class="mock-top"><span class="mock-dots"><span></span><span></span><span></span></span><span class="mock-tag ' + step.cls + '">' + step.tag + '</span></div>';
+  h += '<div class="mock-body"><span class="mock-glyph">' + svg(ICON[step.icon]) + '</span><p class="mock-cap">' + step.cap + '</p></div></div>';
+
+  /* question */
+  h += '<p class="flow-q">' + step.q + '</p>';
+
+  /* options */
+  h += '<div class="flow-options" id="flowOptions">';
+  for (var i = 0; i < step.options.length; i++) {
+    h += '<button class="opt" id="opt' + i + '" onclick="chooseOption(' + i + ')"><span class="opt-marker">' + svg('<path d="M20 6L9 17l-5-5"/>') + '</span><span>' + step.options[i].t + '</span></button>';
+  }
+  h += '</div>';
+
+  /* feedback + continue (hidden until answered) */
+  h += '<div class="flow-feedback is-hidden" id="flowFeedback"></div>';
+  var last = (stepIdx === total - 1);
+  h += '<button class="btn-primary is-hidden" id="flowContinue" onclick="continueStep()">' + (last ? 'See what you learned' : 'Continue') + ' ' + svg('<path d="M5 12h14M13 6l6 6-6 6"/>') + '</button>';
+
+  document.getElementById('flow').innerHTML = h;
+}
+
+function chooseOption(i) {
+  var step = current.steps[stepIdx];
+  var opt = step.options[i];
+  var btn = document.getElementById('opt' + i);
+  var fb = document.getElementById('flowFeedback');
+
+  if (opt.correct) {
+    btn.classList.add('opt-correct');
+    document.getElementById('flowOptions').classList.add('locked');
+    /* disable all options */
+    var opts = document.querySelectorAll('#flowOptions .opt');
+    opts.forEach(function(o){ o.setAttribute('onclick', ''); o.style.cursor = 'default'; });
+    fb.className = 'flow-feedback fb-success';
+    fb.innerHTML = svg('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/>') + '<span>' + opt.fb + '</span>';
+    document.getElementById('flowContinue').classList.remove('is-hidden');
+  } else {
+    btn.classList.remove('opt-correct');
+    btn.classList.add('opt-wrong');
+    fb.className = 'flow-feedback fb-gentle';
+    fb.innerHTML = svg('<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>') + '<span>' + opt.fb + '</span>';
+  }
+  fb.classList.remove('is-hidden');
+}
+
+function continueStep() {
+  stepIdx++;
+  if (stepIdx < current.steps.length) { renderStep(); }
+  else { renderSummary(); }
+  scrollToPractice();
+}
+
+function renderSummary() {
+  var s = current;
+  var h = '';
+  h += '<div class="flow-head">';
+  h += '  <button class="card-back" onclick="backToAll()" aria-label="Back to all practices">' + svg('<path d="M19 12H5M12 19l-7-7 7-7"/>') + '</button>';
+  h += '  <div><div class="flow-scenario">' + s.title + '</div><div class="flow-progress-label">Complete</div></div>';
+  h += '</div>';
+  h += '<div class="flow-progress-track"><div class="flow-progress-fill" style="width:100%"></div></div>';
+
+  h += '<div class="flow-summary-h"><div class="summary-check">' + svg('<path d="M20 6L9 17l-5-5"/>') + '</div><h2>Nice work!</h2><p>You finished this scenario.</p></div>';
+
+  h += '<div class="sum-block"><div class="sum-label">What you learned</div><p>' + s.learned + '</p></div>';
+
+  h += '<div class="sum-block"><div class="sum-label">Want to learn more?</div><div class="sum-resources">';
+  for (var i = 0; i < s.resources.length; i++) {
+    h += '<a class="sum-res" href="learn.html">' + svg(ICON.book, 'class="lead"') + '<span>' + s.resources[i] + '</span>' + svg('<path d="M9 18l6-6-6-6"/>', 'class="chev"') + '</a>';
+  }
+  h += '</div></div>';
+
+  h += '<div class="sum-actions">';
+  h += '<button class="btn-primary" onclick="tryAnother()">Try another scenario ' + svg('<path d="M5 12h14M13 6l6 6-6 6"/>') + '</button>';
+  h += '<button class="btn-ghost-lg" onclick="backToAll()">Back to all practices</button>';
+  h += '</div>';
+
+  document.getElementById('flow').innerHTML = h;
+}
+
+function tryAnother() {
+  var idx = scenarioIndex(current.id);
+  var next = SCENARIOS[(idx + 1) % SCENARIOS.length];
+  openPractice(next.id);
+}
+
+/* ─── LOGIN (static prototype — resets on page refresh, no backend) ─── */
+var isLoggedIn = false;
+function openLoginModal() {
+  var m = document.getElementById('loginModal');
+  if (!m) return;
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  var email = document.getElementById('loginEmail');
+  if (email) email.focus();
+}
+function closeLoginModal() {
+  var m = document.getElementById('loginModal');
+  if (!m) return;
+  m.classList.remove('open');
+  document.body.style.overflow = '';
+}
+function submitLogin(e) {
+  if (e) e.preventDefault();
+  isLoggedIn = true;               /* any input counts as success */
+  closeLoginModal();
+  applyAuthState();
+}
+function applyAuthState() {
+  document.querySelectorAll('[data-auth="in"]').forEach(function(el){ el.classList.toggle('is-hidden', !isLoggedIn); });
+  document.querySelectorAll('[data-auth="out"]').forEach(function(el){ el.classList.toggle('is-hidden', isLoggedIn); });
+}
+document.addEventListener('click', function(ev){
+  var overlay = document.getElementById('loginModal');
+  if (overlay && ev.target === overlay) closeLoginModal();
+});
+document.addEventListener('keydown', function(ev){
+  if (ev.key === 'Escape') closeLoginModal();
+});
+</script>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <button class="modal-close" onclick="closeLoginModal()" aria-label="Close sign in">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <h2 class="modal-title" id="loginTitle">Sign in</h2>
+    <p class="modal-sub">Sign in to save your progress and pick up where you left off. This is a demo — any email and password will work.</p>
+    <form class="modal-form" onsubmit="submitLogin(event)">
+      <label class="modal-label" for="loginEmail">Email or username</label>
+      <input class="modal-input" id="loginEmail" type="text" autocomplete="username" placeholder="you@example.com">
+      <label class="modal-label" for="loginPassword">Password</label>
+      <input class="modal-input" id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password">
+      <button class="modal-submit" type="submit">Sign in</button>
+    </form>
+  </div>
+</div>
+
+<!-- ─── NOT-READY NOTICE (workshop prototype) ───
+     Any link/button that has no real destination yet opens this dimmed notice instead of doing nothing.
+     Opt a control out with data-live. -->
+<style>
+.soon-overlay {
+  position: fixed; inset: 0; z-index: 1100;
+  background: rgba(26,26,26,.55);
+  display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.soon-overlay.open { display: flex; }
+.soon-modal {
+  background: var(--white); border-radius: 22px;
+  padding: 40px 36px 36px; width: 100%; max-width: 440px; text-align: center;
+  box-shadow: 0 24px 60px rgba(0,0,0,.28);
+  animation: soonIn .22s ease;
+}
+@keyframes soonIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
+.soon-icon {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 18px;
+  background: var(--green-light); display: flex; align-items: center; justify-content: center;
+}
+.soon-icon svg { width: 26px; height: 26px; fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.soon-title { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.5px; line-height: 1.15; }
+.soon-sub { font-size: 17px; color: var(--ink-mid); line-height: 1.55; margin-bottom: 26px; }
+.soon-btn {
+  width: 100%; background: var(--green); color: white; border: none;
+  border-radius: 100px; padding: 15px; font-size: 18px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: background .15s;
+}
+.soon-btn:hover { background: var(--green-dark); }
+.soon-btn:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 3px; }
+</style>
+<div class="soon-overlay" id="soonModal">
+  <div class="soon-modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+    <div class="soon-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+    <h2 class="soon-title" id="soonTitle">This part isn't ready yet</h2>
+    <p class="soon-sub">You didn't do anything wrong — we're still building this page. For today, please try something else on the website.</p>
+    <button class="soon-btn" id="soonClose" data-live onclick="closeSoon()">Got it</button>
+  </div>
+</div>
+<script>
+function openSoon() {
+  document.getElementById('soonModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('soonClose').focus();
+}
+function closeSoon() {
+  document.getElementById('soonModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+/* A control is "not built yet" if it's a bare # link or a button with no handler. */
+function isUnbuilt(el) {
+  if (el.hasAttribute('data-live') || el.hasAttribute('onclick')) return false;
+  if (el.tagName === 'A') return el.getAttribute('href') === '#' && !el.classList.contains('nav-logo') && el.id !== 'shareEmailLink';
+  return el.getAttribute('type') !== 'submit' && !el.closest('form');
+}
+document.addEventListener('click', function (ev) {
+  var el = ev.target.closest('a, button');
+  if (el && isUnbuilt(el)) { ev.preventDefault(); openSoon(); return; }
+  if (ev.target === document.getElementById('soonModal')) closeSoon();
+});
+document.addEventListener('keydown', function (ev) {
+  if (ev.key === 'Escape') closeSoon();
+});
+</script>
+</body>
+</html>
