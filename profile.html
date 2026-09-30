@@ -570,6 +570,74 @@ footer {
 .profile-meta   { animation: up .45s ease .17s both; }
 .profile-stats  { animation: up .45s ease .22s both; }
 </style>
+<!-- ─── SLIDE TRANSITIONS · part 1 of 2 (workshop prototype) ───
+     Both the style and the class must be in place before the first paint,
+     otherwise the page paints at full opacity and then blanks for a frame.
+     Part 2 sits at the end of <body>. -->
+<style>
+body { overflow-x: clip; }   /* keeps the slide from flashing a scrollbar */
+
+@keyframes alhFromRight { from { opacity: 0; transform: translateX(64px); }  to { opacity: 1; transform: none; } }
+@keyframes alhFromLeft  { from { opacity: 0; transform: translateX(-64px); } to { opacity: 1; transform: none; } }
+
+/* whole-page entrance: everything below the sticky nav */
+html.alh-right body > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style),
+html.alh-left  body > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) {
+  animation-duration: .38s;
+  animation-timing-function: cubic-bezier(.22, .61, .36, 1);
+  animation-fill-mode: both;
+}
+html.alh-right body > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) { animation-name: alhFromRight; }
+html.alh-left  body > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) { animation-name: alhFromLeft; }
+
+/* The page already had a vertical fade-up on the hero/greet children. It runs
+   longer than the slide (.45s plus up to .3s of stagger), so it is what the eye
+   is left with and the motion reads as vertical. Stand it down mid-slide --
+   descendants only, so the section itself still slides. */
+html.alh-right .hero *, html.alh-right .greet *,
+html.alh-left  .hero *, html.alh-left  .greet * {
+  animation: none !important;
+}
+
+/* Learn tabs: only the panel below the tab bar moves */
+.tab-panel { overflow-x: clip; }
+.tab-panel.alh-right { animation: alhFromRight .34s cubic-bezier(.22, .61, .36, 1) both; }
+.tab-panel.alh-left  { animation: alhFromLeft  .34s cubic-bezier(.22, .61, .36, 1) both; }
+
+/* Motion-sensitive viewers still get the direction cue, just a shorter and
+   smaller one with no fade -- rather than nothing at all. */
+@media (prefers-reduced-motion: reduce) {
+  @keyframes alhFromRight { from { transform: translateX(20px); }  to { transform: none; } }
+  @keyframes alhFromLeft  { from { transform: translateX(-20px); } to { transform: none; } }
+  html.alh-right body > *, html.alh-left body > * { animation-duration: .2s; }
+  .tab-panel.alh-right, .tab-panel.alh-left { animation-duration: .2s; }
+}
+</style>
+<script>
+/* Decide the direction before anything is painted. Pairs with part 2. */
+(function () {
+  var RANK = {
+    'index.html': 0,
+    'learn.html': 1,
+    'reset-recommendations.html': 1,
+    'get-help.html': 2,
+    'profile.html': 3
+  };
+  function file(p) {
+    var f = (p || '').split('?')[0].split('#')[0].split('/').pop();
+    return f || 'index.html';
+  }
+  var here = RANK[file(location.pathname)];
+  if (here === undefined) return;
+  var from = null;
+  try {
+    from = sessionStorage.getItem('alhFrom');
+    sessionStorage.removeItem('alhFrom');
+  } catch (e) {}
+  if (from === null || Number(from) === here) return;
+  document.documentElement.classList.add(Number(from) < here ? 'alh-right' : 'alh-left');
+})();
+</script>
 </head>
 <body>
 
@@ -1057,84 +1125,39 @@ document.addEventListener('keydown', function (ev) {
 });
 </script>
 
-<!-- ─── SLIDE TRANSITIONS (workshop prototype) ───
-     Moving between nav pages, or between the Learn tabs, slides the area below
-     the bar in from the side you came from, so the order of the tabs is felt as
-     well as seen. Only the area below the bar moves; the bar itself stays put. -->
-<style>
-body { overflow-x: clip; }   /* keeps the slide from flashing a scrollbar */
-
-@keyframes alhFromRight { from { opacity: 0; transform: translateX(64px); }  to { opacity: 1; transform: none; } }
-@keyframes alhFromLeft  { from { opacity: 0; transform: translateX(-64px); } to { opacity: 1; transform: none; } }
-
-/* The page already had a vertical fade-up on the hero/greet children. It runs
-   longer than the slide (.45s plus up to .3s of stagger), so it is what the eye
-   is left with and the motion reads as vertical. Stand it down mid-slide. */
-body.alh-right .hero *, body.alh-right .greet *,
-body.alh-left  .hero *, body.alh-left  .greet * {
-  animation: none !important;
-}
-
-/* whole-page entrance: everything below the sticky nav */
-body.alh-right > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style),
-body.alh-left  > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) {
-  animation-duration: .38s;
-  animation-timing-function: cubic-bezier(.22, .61, .36, 1);
-  animation-fill-mode: both;
-}
-body.alh-right > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) { animation-name: alhFromRight; }
-body.alh-left  > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) { animation-name: alhFromLeft; }
-
-/* Learn tabs: only the panel below the tab bar moves */
-.tab-panel { overflow-x: clip; }
-.tab-panel.alh-right { animation: alhFromRight .34s cubic-bezier(.22, .61, .36, 1) both; }
-.tab-panel.alh-left  { animation: alhFromLeft  .34s cubic-bezier(.22, .61, .36, 1) both; }
-
-@media (prefers-reduced-motion: reduce) {
-  body.alh-right > *, body.alh-left > *,
-  .tab-panel.alh-right, .tab-panel.alh-left { animation: none !important; }
-}
-</style>
+<!-- ─── SLIDE TRANSITIONS · part 2 of 2 (workshop prototype) ───
+     Records which page we are leaving, and clears the entrance class once it
+     has played. The style and the direction live in part 1, in <head>. -->
 <script>
-/* Where each page sits in the nav, left to right. The article lives under Learn,
-   so it shares Learn's position and a drill-down does not slide sideways. */
-var ALH_RANK = {
-  'index.html': 0,
-  'learn.html': 1,
-  'reset-recommendations.html': 1,
-  'get-help.html': 2,
-  'profile.html': 3
-};
-function alhFile(href) {
-  var f = (href || '').split('?')[0].split('#')[0].split('/').pop();
-  return f || 'index.html';
-}
-function alhRank(file) {
-  return Object.prototype.hasOwnProperty.call(ALH_RANK, file) ? ALH_RANK[file] : null;
-}
-/* remember which page we are leaving from */
-document.addEventListener('click', function (ev) {
-  var a = ev.target.closest('a[href]');
-  if (!a) return;
-  if (alhRank(alhFile(a.getAttribute('href'))) === null) return;
-  var here = alhRank(alhFile(location.pathname));
-  if (here === null) return;
-  try { sessionStorage.setItem('alhFrom', String(here)); } catch (e) {}
-});
-/* play the entrance on arrival */
-window.addEventListener('DOMContentLoaded', function () {
-  var here = alhRank(alhFile(location.pathname));
-  if (here === null) return;
-  var from = null;
-  try {
-    from = sessionStorage.getItem('alhFrom');
-    sessionStorage.removeItem('alhFrom');
-  } catch (e) {}
-  if (from === null || Number(from) === here) return;
-  var cls = Number(from) < here ? 'alh-right' : 'alh-left';
-  document.body.classList.add(cls);
-  setTimeout(function () { document.body.classList.remove(cls); }, 420);
-});
+(function () {
+  var RANK = {
+    'index.html': 0,
+    'learn.html': 1,
+    'reset-recommendations.html': 1,
+    'get-help.html': 2,
+    'profile.html': 3
+  };
+  function file(href) {
+    var f = (href || '').split('?')[0].split('#')[0].split('/').pop();
+    return f || 'index.html';
+  }
+
+  /* remember which page we are leaving from */
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest('a[href]');
+    if (!a) return;
+    if (RANK[file(a.getAttribute('href'))] === undefined) return;
+    var here = RANK[file(location.pathname)];
+    if (here === undefined) return;
+    try { sessionStorage.setItem('alhFrom', String(here)); } catch (e) {}
+  });
+
+  /* drop the class once the entrance has finished */
+  var root = document.documentElement;
+  if (root.classList.contains('alh-right') || root.classList.contains('alh-left')) {
+    setTimeout(function () { root.classList.remove('alh-right', 'alh-left'); }, 560);
+  }
+})();
 </script>
 </body>
 </html>
