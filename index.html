@@ -1302,13 +1302,21 @@ document.addEventListener('keydown', function (ev) {
 <style>
 body { overflow-x: clip; }   /* keeps the slide from flashing a scrollbar */
 
-@keyframes alhFromRight { from { opacity: 0; transform: translateX(26px); }  to { opacity: 1; transform: none; } }
-@keyframes alhFromLeft  { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: none; } }
+@keyframes alhFromRight { from { opacity: 0; transform: translateX(64px); }  to { opacity: 1; transform: none; } }
+@keyframes alhFromLeft  { from { opacity: 0; transform: translateX(-64px); } to { opacity: 1; transform: none; } }
+
+/* The page already had a vertical fade-up on the hero/greet children. It runs
+   longer than the slide (.45s plus up to .3s of stagger), so it is what the eye
+   is left with and the motion reads as vertical. Stand it down mid-slide. */
+body.alh-right .hero *, body.alh-right .greet *,
+body.alh-left  .hero *, body.alh-left  .greet * {
+  animation: none !important;
+}
 
 /* whole-page entrance: everything below the sticky nav */
 body.alh-right > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style),
 body.alh-left  > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) {
-  animation-duration: .3s;
+  animation-duration: .38s;
   animation-timing-function: cubic-bezier(.22, .61, .36, 1);
   animation-fill-mode: both;
 }
@@ -1317,8 +1325,8 @@ body.alh-left  > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not
 
 /* Learn tabs: only the panel below the tab bar moves */
 .tab-panel { overflow-x: clip; }
-.tab-panel.alh-right { animation: alhFromRight .26s cubic-bezier(.22, .61, .36, 1) both; }
-.tab-panel.alh-left  { animation: alhFromLeft  .26s cubic-bezier(.22, .61, .36, 1) both; }
+.tab-panel.alh-right { animation: alhFromRight .34s cubic-bezier(.22, .61, .36, 1) both; }
+.tab-panel.alh-left  { animation: alhFromLeft  .34s cubic-bezier(.22, .61, .36, 1) both; }
 
 @media (prefers-reduced-motion: reduce) {
   body.alh-right > *, body.alh-left > *,
