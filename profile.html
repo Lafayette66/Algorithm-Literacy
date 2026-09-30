@@ -984,10 +984,10 @@ footer {
     <span>Algorithm Literacy Hub · A free community resource</span>
   </div>
   <div class="footer-links">
-    <a href="#" class="hi">Find a class</a>
-    <a href="#">For families &amp; friends</a>
-    <a href="#">For educators</a>
-    <a href="#">About</a>
+    <span class="hi">Find a class</span>
+    <span>For families &amp; friends</span>
+    <span>For educators</span>
+    <span>About</span>
   </div>
 </footer>
 
@@ -999,54 +999,46 @@ function selectClaim(method) {
 </script>
 
 <!-- ─── NOT-READY NOTICE (workshop prototype) ───
-     Any link/button that has no real destination yet opens this dimmed notice instead of doing nothing.
+     Any link/button with no real destination yet shows a brief, non-blocking note
+     instead of doing nothing. It is said once per control; after that the control
+     just stays visibly spent, so nobody hits the same wall twice.
      Opt a control out with data-live. -->
 <style>
-.soon-overlay {
-  position: fixed; inset: 0; z-index: 1100;
-  background: rgba(26,26,26,.55);
-  display: none; align-items: center; justify-content: center; padding: 24px;
+.soon-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(14px);
+  z-index: 1100; max-width: min(520px, calc(100vw - 32px));
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--ink); color: var(--white);
+  border-radius: 14px; padding: 16px 20px;
+  box-shadow: 0 12px 34px rgba(0,0,0,.26);
+  font-size: 16px; line-height: 1.5;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
 }
-.soon-overlay.open { display: flex; }
-.soon-modal {
-  background: var(--white); border-radius: 22px;
-  padding: 40px 36px 36px; width: 100%; max-width: 440px; text-align: center;
-  box-shadow: 0 24px 60px rgba(0,0,0,.28);
-  animation: soonIn .22s ease;
+.soon-toast.open { opacity: 1; transform: translateX(-50%) translateY(0); }
+.soon-toast svg {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
-@keyframes soonIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
-.soon-icon {
-  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 18px;
-  background: var(--green-light); display: flex; align-items: center; justify-content: center;
-}
-.soon-icon svg { width: 26px; height: 26px; fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.soon-title { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.5px; line-height: 1.15; }
-.soon-sub { font-size: 17px; color: var(--ink-mid); line-height: 1.55; margin-bottom: 26px; }
-.soon-btn {
-  width: 100%; background: var(--green); color: white; border: none;
-  border-radius: 100px; padding: 15px; font-size: 18px; font-weight: 500;
-  cursor: pointer; font-family: inherit; transition: background .15s;
-}
-.soon-btn:hover { background: var(--green-dark); }
-.soon-btn:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 3px; }
+/* a control they have already tried — dimmed a little, never hidden */
+[data-tried] { opacity: .55; }
+@media (prefers-reduced-motion: reduce) { .soon-toast { transition: none; } }
 </style>
-<div class="soon-overlay" id="soonModal">
-  <div class="soon-modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
-    <div class="soon-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-    <h2 class="soon-title" id="soonTitle">This part isn't ready yet</h2>
-    <p class="soon-sub">You didn't do anything wrong — we're still building this page. For today, please try something else on the website.</p>
-    <button class="soon-btn" id="soonClose" data-live onclick="closeSoon()">Got it</button>
-  </div>
+<div class="soon-toast" id="soonToast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+  <span>We haven't built this part yet — you didn't do anything wrong.</span>
 </div>
 <script>
+var soonTimer = null;
 function openSoon() {
-  document.getElementById('soonModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('soonClose').focus();
+  var t = document.getElementById('soonToast');
+  t.classList.add('open');
+  clearTimeout(soonTimer);
+  soonTimer = setTimeout(function () { t.classList.remove('open'); }, 3600);
 }
 function closeSoon() {
-  document.getElementById('soonModal').classList.remove('open');
-  document.body.style.overflow = '';
+  document.getElementById('soonToast').classList.remove('open');
+  clearTimeout(soonTimer);
 }
 /* A control is "not built yet" if it's a bare # link or a button with no handler. */
 function isUnbuilt(el) {
@@ -1056,8 +1048,9 @@ function isUnbuilt(el) {
 }
 document.addEventListener('click', function (ev) {
   var el = ev.target.closest('a, button');
-  if (el && isUnbuilt(el)) { ev.preventDefault(); openSoon(); return; }
-  if (ev.target === document.getElementById('soonModal')) closeSoon();
+  if (!el || !isUnbuilt(el)) return;
+  ev.preventDefault();
+  if (!el.hasAttribute('data-tried')) { el.setAttribute('data-tried', ''); openSoon(); }
 });
 document.addEventListener('keydown', function (ev) {
   if (ev.key === 'Escape') closeSoon();

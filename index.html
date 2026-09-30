@@ -858,12 +858,11 @@ footer {
   <div class="section-inner">
     <div class="sec-head">
       <h2>Common questions, plain answers</h2>
-      <a href="#" class="sec-link">See all →</a>
     </div>
     <div class="q-grid">
 
       <!-- YouTube card -->
-      <div class="q-card">
+      <div class="q-card" onclick="askThenScroll('videos')">
         <div class="q-card-img q-bg-yt">
           <div class="platform-logo">
             <svg width="120" height="84" viewBox="0 0 120 84" aria-label="YouTube"><rect width="120" height="84" rx="12" fill="#FF0000"/><polygon points="48,24 48,60 82,42" fill="white"/></svg>
@@ -889,24 +888,6 @@ footer {
       </div>
 
       <!-- Instagram card -->
-      <div class="q-card">
-        <div class="q-card-img q-bg-ig">
-          <div class="platform-logo">
-            <svg width="84" height="84" viewBox="0 0 84 84" aria-label="Instagram">
-              <defs><linearGradient id="ig3" x1="0" y1="84" x2="84" y2="0"><stop offset="0%" stop-color="#F9CE34"/><stop offset="35%" stop-color="#EE1D52"/><stop offset="100%" stop-color="#6228D7"/></linearGradient></defs>
-              <rect width="84" height="84" rx="20" fill="url(#ig3)"/>
-              <rect x="20" y="20" width="44" height="44" rx="13" stroke="white" stroke-width="5" fill="none"/>
-              <circle cx="42" cy="42" r="11" stroke="white" stroke-width="5" fill="none"/>
-              <circle cx="57" cy="27" r="4" fill="white"/>
-            </svg>
-          </div>
-        </div>
-        <div class="q-card-body">
-          <span class="q-category qc-ig">Instagram</span>
-          <h3>Why do I see posts from people I don't follow?</h3>
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
@@ -916,36 +897,8 @@ footer {
   <div class="section-inner">
     <div class="sec-head">
       <h2>Upcoming classes</h2>
-      <a href="#" class="sec-link">View all classes →</a>
     </div>
     <div class="class-grid">
-
-      <div class="class-card">
-        <div class="class-img"><img src="data:image/png;base64,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" alt="Class image" style="width:50%;height:auto;display:block;"></div>
-        <div class="class-body">
-          <div class="class-meta">
-            <span class="class-meta-item">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-              Wednesday, Sep 23
-            </span>
-            <span class="class-meta-dot">·</span>
-            <span class="class-meta-item">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-              2:00 PM
-            </span>
-          </div>
-          <h4>Understanding your Facebook feed</h4>
-          <p class="class-desc">Why do you see certain posts? Learn how to take control.</p>
-        </div>
-        <div class="class-facilitator">
-          <div class="fac-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
-          <div class="fac-info"><span>Facilitator:</span><strong>Margaret Liu</strong></div>
-        </div>
-        <div class="class-foot">
-          <span class="class-type ct-ip">In person</span>
-          <button class="class-link">Reserve a spot <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
-        </div>
-      </div>
 
       <div class="class-card">
         <div class="class-img"><img src="data:image/png;base64,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" alt="Class image" style="width:50%;height:auto;display:block;"></div>
@@ -1026,10 +979,10 @@ footer {
     <span>Algorithm Literacy Hub · A free community resource</span>
   </div>
   <div class="footer-links">
-    <a href="#" class="hi">Find a class</a>
-    <a href="#">For families &amp; friends</a>
-    <a href="#">For educators</a>
-    <a href="#">About</a>
+    <span class="hi">Find a class</span>
+    <span>For families &amp; friends</span>
+    <span>For educators</span>
+    <span>About</span>
   </div>
 </footer>
 
@@ -1040,17 +993,17 @@ var HANA_PRESETS = {
   ads: {
     q: "Why do these ads keep following me around?",
     a: "It can feel like you're being watched, but it's simpler than that. When you look at something online, advertisers can tag your browser and then show you that same product on other websites — it's called retargeting. It fades on its own over time, and you can speed it up by resetting your ad settings or clearing your browsing history.",
-    learnLink: "learn.html#practice-retargeting-ad"
+    learnLink: "learn.html#self"
   },
   insurance: {
     q: "Why do I keep seeing insurance ads?",
     a: "It can feel like your device is listening in, but it's simpler than that. If you or someone in your household looked at insurance sites or asked about coverage, advertisers can tag that and keep showing you related ads on other websites — it's called retargeting. It isn't only happening to you, and it fades on its own over time. You can speed it up by adjusting your ad settings or clearing your browsing history.",
-    learnLink: "learn.html#practice-retargeting-ad"
+    learnLink: "learn.html#self"
   },
   videos: {
     q: "Why do I keep getting recommended the same videos?",
     a: "Video apps pay close attention to what you watch, pause on, or finish, and then offer more of the same to keep you watching. It isn't random, and it isn't only happening to you — everyone gets their own version. Small habits, like clearing your watch history or tapping “not interested,” can gently reshape what you're shown.",
-    learnLink: "learn.html#practice-youtube-feed"
+    learnLink: "learn.html#self"
   },
   political: {
     q: "Why do I see so many political posts?",
@@ -1279,54 +1232,46 @@ document.addEventListener('keydown', function(ev){
 </div>
 
 <!-- ─── NOT-READY NOTICE (workshop prototype) ───
-     Any link/button that has no real destination yet opens this dimmed notice instead of doing nothing.
+     Any link/button with no real destination yet shows a brief, non-blocking note
+     instead of doing nothing. It is said once per control; after that the control
+     just stays visibly spent, so nobody hits the same wall twice.
      Opt a control out with data-live. -->
 <style>
-.soon-overlay {
-  position: fixed; inset: 0; z-index: 1100;
-  background: rgba(26,26,26,.55);
-  display: none; align-items: center; justify-content: center; padding: 24px;
+.soon-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(14px);
+  z-index: 1100; max-width: min(520px, calc(100vw - 32px));
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--ink); color: var(--white);
+  border-radius: 14px; padding: 16px 20px;
+  box-shadow: 0 12px 34px rgba(0,0,0,.26);
+  font-size: 16px; line-height: 1.5;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s ease, transform .18s ease;
 }
-.soon-overlay.open { display: flex; }
-.soon-modal {
-  background: var(--white); border-radius: 22px;
-  padding: 40px 36px 36px; width: 100%; max-width: 440px; text-align: center;
-  box-shadow: 0 24px 60px rgba(0,0,0,.28);
-  animation: soonIn .22s ease;
+.soon-toast.open { opacity: 1; transform: translateX(-50%) translateY(0); }
+.soon-toast svg {
+  width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
+  fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
-@keyframes soonIn { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: none; } }
-.soon-icon {
-  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 18px;
-  background: var(--green-light); display: flex; align-items: center; justify-content: center;
-}
-.soon-icon svg { width: 26px; height: 26px; fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.soon-title { font-family: 'DM Serif Display', serif; font-size: 32px; font-weight: 400; color: var(--ink); margin-bottom: 10px; letter-spacing: -0.5px; line-height: 1.15; }
-.soon-sub { font-size: 17px; color: var(--ink-mid); line-height: 1.55; margin-bottom: 26px; }
-.soon-btn {
-  width: 100%; background: var(--green); color: white; border: none;
-  border-radius: 100px; padding: 15px; font-size: 18px; font-weight: 500;
-  cursor: pointer; font-family: inherit; transition: background .15s;
-}
-.soon-btn:hover { background: var(--green-dark); }
-.soon-btn:focus-visible { outline: 3px solid var(--green-dark); outline-offset: 3px; }
+/* a control they have already tried — dimmed a little, never hidden */
+[data-tried] { opacity: .55; }
+@media (prefers-reduced-motion: reduce) { .soon-toast { transition: none; } }
 </style>
-<div class="soon-overlay" id="soonModal">
-  <div class="soon-modal" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
-    <div class="soon-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
-    <h2 class="soon-title" id="soonTitle">This part isn't ready yet</h2>
-    <p class="soon-sub">You didn't do anything wrong — we're still building this page. For today, please try something else on the website.</p>
-    <button class="soon-btn" id="soonClose" data-live onclick="closeSoon()">Got it</button>
-  </div>
+<div class="soon-toast" id="soonToast" role="status" aria-live="polite">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+  <span>We haven't built this part yet — you didn't do anything wrong.</span>
 </div>
 <script>
+var soonTimer = null;
 function openSoon() {
-  document.getElementById('soonModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('soonClose').focus();
+  var t = document.getElementById('soonToast');
+  t.classList.add('open');
+  clearTimeout(soonTimer);
+  soonTimer = setTimeout(function () { t.classList.remove('open'); }, 3600);
 }
 function closeSoon() {
-  document.getElementById('soonModal').classList.remove('open');
-  document.body.style.overflow = '';
+  document.getElementById('soonToast').classList.remove('open');
+  clearTimeout(soonTimer);
 }
 /* A control is "not built yet" if it's a bare # link or a button with no handler. */
 function isUnbuilt(el) {
@@ -1336,8 +1281,9 @@ function isUnbuilt(el) {
 }
 document.addEventListener('click', function (ev) {
   var el = ev.target.closest('a, button');
-  if (el && isUnbuilt(el)) { ev.preventDefault(); openSoon(); return; }
-  if (ev.target === document.getElementById('soonModal')) closeSoon();
+  if (!el || !isUnbuilt(el)) return;
+  ev.preventDefault();
+  if (!el.hasAttribute('data-tried')) { el.setAttribute('data-tried', ''); openSoon(); }
 });
 document.addEventListener('keydown', function (ev) {
   if (ev.key === 'Escape') closeSoon();
