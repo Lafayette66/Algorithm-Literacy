@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>Get help — Algorithm Literacy Hub</title>
+<title>Taking a break — Algorithm Literacy Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
 
@@ -290,6 +290,50 @@ footer { background: var(--white); border-top: 1.5px solid var(--border); paddin
   cursor: pointer; font-family: inherit; transition: background .15s;
 }
 .modal-submit:hover { background: var(--green-dark); }
+
+/* ─── SHARE MODAL (additive — reuses .modal-overlay / .modal shells) ─── */
+.share-what {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--surface); border-radius: 12px;
+  padding: 14px 16px; margin-bottom: 22px;
+}
+.share-what svg {
+  width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px;
+  fill: none; stroke: var(--ink-muted); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.share-what-text { font-size: 15px; color: var(--ink-mid); line-height: 1.5; }
+.share-what-text strong { color: var(--ink); font-weight: 500; }
+
+.share-opts { display: flex; flex-direction: column; gap: 10px; }
+.share-opt {
+  display: flex; align-items: center; gap: 14px; width: 100%;
+  font-family: inherit; font-size: 17px; font-weight: 500; text-align: left;
+  color: var(--ink); background: var(--white);
+  border: 2px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; min-height: 64px;
+  cursor: pointer; transition: all .15s; text-decoration: none;
+}
+.share-opt:hover { border-color: var(--green); background: var(--green-light); color: var(--green); }
+.share-opt svg {
+  width: 22px; height: 22px; flex-shrink: 0;
+  fill: none; stroke: currentColor; stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.share-opt-sub {
+  display: block; font-size: 14px; font-weight: 400;
+  color: var(--ink-muted); margin-top: 2px;
+}
+.share-opt:hover .share-opt-sub { color: var(--green-dark); }
+
+.share-note {
+  display: flex; align-items: center; gap: 8px; justify-content: center;
+  margin-top: 18px; font-size: 16px; font-weight: 500; color: var(--green);
+}
+.share-note svg {
+  width: 18px; height: 18px; fill: none; stroke: currentColor;
+  stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round;
+}
 </style>
 </head>
 
@@ -306,7 +350,7 @@ footer { background: var(--white); border-top: 1.5px solid var(--border); paddin
   <nav class="nav-links" aria-label="Main navigation">
     <a href="index.html">Home</a>
     <div class="nav-item has-dropdown">
-      <a href="learn.html">Learn
+      <a href="learn.html" class="active" aria-current="page">Learn
         <svg class="caret" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </a>
       <div class="dropdown" role="menu" aria-label="Learn">
@@ -324,7 +368,7 @@ footer { background: var(--white); border-top: 1.5px solid var(--border); paddin
         </a>
       </div>
     </div>
-    <a href="get-help.html" class="active" aria-current="page">Get help</a>
+    <a href="get-help.html">Get help</a>
   </nav>
   <div class="nav-right">
     <button class="btn-ghost" data-auth="out" onclick="openLoginModal()">Sign in</button>
@@ -335,233 +379,154 @@ footer { background: var(--white); border-top: 1.5px solid var(--border); paddin
     </button>
   </div>
 </nav>
+<!-- ARTICLE -->
+<style>
+.art-wrap { max-width: 780px; margin: 0 auto; padding: 52px 24px 72px; }
+.art-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 17px; font-weight: 500; color: var(--green);
+  text-decoration: none; margin-bottom: 30px;
+}
+.art-back:hover { text-decoration: underline; }
+.art-back svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.art-kicker { font-size: 16px; font-weight: 500; color: var(--green); letter-spacing: .3px; text-transform: uppercase; margin-bottom: 12px; }
+.art-title {
+  font-family: 'DM Serif Display', serif; font-weight: 400;
+  font-size: 46px; line-height: 1.08; letter-spacing: -1px;
+  color: var(--ink); margin-bottom: 16px;
+}
+.art-meta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; font-size: 16px; color: var(--ink-muted); margin-bottom: 34px; }
+.art-meta span { display: inline-flex; align-items: center; gap: 6px; }
+.art-meta svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.art-lede { font-size: 21px; line-height: 1.6; color: var(--ink-mid); margin-bottom: 36px; }
+.art-wrap h2 {
+  font-family: 'DM Serif Display', serif; font-weight: 400;
+  font-size: 31px; line-height: 1.2; color: var(--ink);
+  margin: 44px 0 14px;
+}
+.art-wrap p { font-size: 18px; line-height: 1.72; color: var(--ink); margin-bottom: 18px; }
+.art-note {
+  background: var(--green-light); border-radius: 14px;
+  padding: 22px 24px; margin: 30px 0;
+  font-size: 18px; line-height: 1.65; color: var(--ink);
+}
+.art-note strong { font-weight: 500; }
+.art-steps { list-style: none; counter-reset: s; margin: 22px 0 30px; }
+.art-steps li {
+  counter-increment: s; position: relative;
+  padding: 0 0 0 52px; margin-bottom: 22px;
+  font-size: 18px; line-height: 1.65; color: var(--ink);
+}
+.art-steps li::before {
+  content: counter(s); position: absolute; left: 0; top: -2px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--green); color: var(--white);
+  font-size: 17px; font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+}
+.art-steps li strong { font-weight: 500; display: block; margin-bottom: 3px; }
+.art-end { border-top: 1.5px solid var(--border); margin-top: 48px; padding-top: 30px; }
+.art-end-h { font-size: 19px; font-weight: 500; color: var(--ink); margin-bottom: 16px; }
+.art-end-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.art-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 16px; font-weight: 500; padding: 11px 20px; border-radius: 100px;
+  border: 1.5px solid var(--border); background: var(--white); color: var(--ink-mid);
+  cursor: pointer; font-family: inherit; text-decoration: none; transition: all .15s;
+}
+.art-btn:hover { border-color: var(--green); color: var(--green); background: var(--green-light); }
+.art-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.art-btn.primary { background: var(--green); color: var(--white); border-color: var(--green); }
+.art-btn.primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+@media (max-width: 600px) {
+  .art-wrap { padding: 34px 20px 56px; }
+  .art-title { font-size: 33px; }
+  .art-lede { font-size: 19px; }
+}
+@media print {
+  .art-back, .art-end { display: none !important; }
+}
+</style>
 
-<!-- 1 · HERO -->
-<section class="gh-hero">
-  <div class="gh-hero-inner">
-    <h1>We're here to <em>help</em></h1>
-    <p>Talk to a real person — online or in person, at your own pace.</p>
+<article class="art-wrap">
+  <a class="art-back" href="learn.html#self">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Learn
+  </a>
+
+  <div class="art-kicker">Read &amp; listen</div>
+  <h1 class="art-title">Taking a break: how to reset your recommendations</h1>
+  <div class="art-meta">
+    <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg> 5 min read</span>
+    <span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg> Works on any website or app</span>
   </div>
-</section>
 
-<!-- 2 · WAYS TO GET HELP -->
-<section class="section ways-section">
-  <div class="section-inner">
-    <div class="way-grid">
+  <p class="art-lede">Feeling like your feed is stuck on one thing? You can clear it out and
+  start fresh. Nothing here is permanent, and none of it will delete your account.</p>
 
-      <div class="way-card">
-        <div class="way-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-        <h3>Call us</h3>
-        <p>Speak with a friendly volunteer over the phone — no question is too small.</p>
-        <div class="way-extra">
-          <div class="way-phone">1-800-555-0199</div>
-          <div class="way-hours">Mon–Fri, 9am–5pm</div>
-        </div>
-        <a class="way-btn" href="tel:18005550199">Call now <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
+  <h2>Why your feed gets stuck</h2>
+  <p>A feed is built from what you have watched, clicked, paused on, and liked. Watch one
+  video about insurance and the site treats that as a signal: you are interested in
+  insurance. It then shows you more of it, and if you glance at those too, the signal gets
+  stronger. Nothing has gone wrong &mdash; the feed is doing exactly what it was built to do.</p>
 
-      <div class="way-card">
-        <div class="way-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <h3>Book a 1-on-1 session</h3>
-        <p>Schedule a video call with a real person who'll walk you through it, step by step.</p>
-        <div class="way-extra"></div>
-        <a class="way-btn" href="#book">Book a session <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
+  <p>That also means it can be steered. The signals are yours, and you can change them.</p>
 
-      <div class="way-card">
-        <div class="way-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <h3>Find help near me</h3>
-        <p>Visit a senior center or library nearby for friendly, in-person support.</p>
-        <div class="way-extra"></div>
-        <a class="way-btn ghost" href="#find-help-near-you">Find a location <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      </div>
-
-    </div>
+  <div class="art-note">
+    <strong>The short version:</strong> every click and every like is a vote.
+    If you want a different feed, change your votes.
   </div>
-</section>
 
-<!-- 3 · BOOK A SESSION -->
-<section class="section book-section" id="book">
-  <div class="section-inner">
-    <div class="sec-head">
-      <h2>Book a <em>session</em></h2>
-      <p>Pick a day, tell us what you'd like help with, and we'll do the rest.</p>
-    </div>
+  <h2>Four things you can do today</h2>
+  <ol class="art-steps">
+    <li><strong>Clear your watch history</strong>
+    Most sites keep a list of everything you have watched, and let you empty it. Look in
+    Settings for &ldquo;History&rdquo; or &ldquo;Activity&rdquo;. Emptying it takes away
+    the old signals, so the feed starts from a clean slate.</li>
 
-    <div class="book-card">
-      <!-- date picker -->
-      <div class="book-date">
-        <div class="cal-head">
-          <div class="cal-month">September 2026</div>
-          <div class="cal-nav">
-            <button aria-label="Previous month"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
-            <button aria-label="Next month"><svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></button>
-          </div>
-        </div>
-        <div class="cal-grid">
-          <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
-          <!-- September 1, 2026 = Tuesday -->
-          <div class="cal-cell"></div><div class="cal-cell"></div>
-          <div class="cal-cell muted">1</div><div class="cal-cell muted">2</div><div class="cal-cell muted">3</div><div class="cal-cell muted">4</div><div class="cal-cell muted">5</div>
-          <div class="cal-cell muted">6</div><div class="cal-cell muted">7</div><div class="cal-cell muted">8</div><div class="cal-cell muted">9</div><div class="cal-cell muted">10</div><div class="cal-cell muted">11</div><div class="cal-cell muted">12</div>
-          <div class="cal-cell muted">13</div><div class="cal-cell muted">14</div><div class="cal-cell muted">15</div><div class="cal-cell muted">16</div><div class="cal-cell muted">17</div><div class="cal-cell muted">18</div><div class="cal-cell muted">19</div>
-          <div class="cal-cell muted">20</div><div class="cal-cell muted">21</div><div class="cal-cell muted">22</div>
-          <div class="cal-cell selectable" onclick="pickDay(this,'Wed, Sep 23')">23</div>
-          <div class="cal-cell selectable" onclick="pickDay(this,'Thu, Sep 24')">24</div>
-          <div class="cal-cell selectable" onclick="pickDay(this,'Fri, Sep 25')">25</div>
-          <div class="cal-cell selectable" onclick="pickDay(this,'Sat, Sep 26')">26</div>
-          <div class="cal-cell selectable" onclick="pickDay(this,'Sun, Sep 27')">27</div>
-          <div class="cal-cell selectable" onclick="pickDay(this,'Mon, Sep 28')">28</div>
-          <div class="cal-cell selectable" onclick="pickDay(this,'Tue, Sep 29')">29</div>
-          <div class="cal-cell selectable" onclick="pickDay(this,'Wed, Sep 30')">30</div>
-        </div>
-        <div class="cal-pick" id="calPick">Selected day: <strong>none yet</strong></div>
-      </div>
+    <li><strong>Use &ldquo;Not interested&rdquo;</strong>
+    This sits behind the three dots next to a video or a post. It works &mdash; but only if
+    you use it on the thing you actually do not want. One use is a small vote; a few over a
+    week add up.</li>
 
-      <!-- fields -->
-      <div class="book-fields">
-        <div class="field">
-          <label for="bk-topic">What would you like help with?</label>
-          <select id="bk-topic">
-            <option>My account was hacked</option>
-            <option>Suspicious link or message</option>
-            <option>Ad tracking</option>
-            <option>Privacy settings</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="bk-name">Your name</label>
-          <input id="bk-name" type="text" placeholder="Bill H.">
-        </div>
-        <div class="field">
-          <label for="bk-contact">Phone or email</label>
-          <input id="bk-contact" type="text" placeholder="(555) 123-4567 or bill@email.com">
-        </div>
-        <button class="btn-primary book-submit" onclick="submitBooking()">Request a session <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        <div class="book-note">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 2"/></svg>
-          We'll confirm your booking within 24 hours.
-        </div>
-        <div class="book-success" id="bookSuccess">
-          <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-          Thanks! Your request is in — we'll be in touch within 24 hours.
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    <li><strong>Turn off ad personalisation</strong>
+    In Settings, look for &ldquo;Ads&rdquo; or &ldquo;Ad settings&rdquo;. You will still
+    see ads, but they stop being picked from your browsing. This is the setting that stops
+    an ad following you from one website to another.</li>
 
-<!-- 4 · FIND HELP NEAR YOU -->
-<section class="section loc-section" id="find-help-near-you">
-  <div class="section-inner">
-    <div class="sec-head">
-      <h2>Find help <em>near you</em></h2>
-      <p>Enter your zip code to find a senior center or library that offers in-person help.</p>
-    </div>
+    <li><strong>Watch something different, on purpose</strong>
+    This is the slowest step and the most effective one. Search for something you genuinely
+    enjoy and watch a few of those. You are not just removing old votes &mdash; you are
+    casting new ones.</li>
+  </ol>
 
-    <div class="loc-search">
-      <div class="loc-search-bar">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Enter your zip code" aria-label="Enter your zip code">
-      </div>
-      <button class="btn-primary">Search <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-    </div>
+  <h2>What to expect</h2>
+  <p>Give it a few days. Feeds do not change the moment you press a button, and they drift
+  back toward whatever you look at most. If the old topic creeps back, that usually means
+  something is still being watched or clicked &mdash; not that the steps failed.</p>
 
-    <div class="loc-list">
+  <p>And if it does creep back, you already know what to do about it. That is the part worth
+  keeping.</p>
 
-      <div class="loc-card">
-        <div class="loc-pin"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <div class="loc-info">
-          <h3>Riverside Senior Center</h3>
-          <div class="loc-meta">
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 412 Riverside Ave · 2.1 mi away</span>
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Open Mon–Fri, 9am–4pm</span>
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (555) 201-3344</span>
-          </div>
-          <a class="loc-dir" href="#">Get directions <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </div>
-
-      <div class="loc-card">
-        <div class="loc-pin"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <div class="loc-info">
-          <h3>Downtown Public Library</h3>
-          <div class="loc-meta">
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 88 Main St · 3.4 mi away</span>
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Open daily, 10am–6pm</span>
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (555) 884-1200</span>
-          </div>
-          <a class="loc-dir" href="#">Get directions <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </div>
-
-      <div class="loc-card">
-        <div class="loc-pin"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-        <div class="loc-info">
-          <h3>Eastside Community Library</h3>
-          <div class="loc-meta">
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> 256 Oak Ridge Rd · 4.0 mi away</span>
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Open Tue–Sat, 9am–5pm</span>
-            <span class="loc-meta-item"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> (555) 332-7788</span>
-          </div>
-          <a class="loc-dir" href="#">Get directions <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </div>
-
+  <div class="art-end">
+    <div class="art-end-h">Was this useful?</div>
+    <div class="art-end-row">
+      <button class="art-btn primary" onclick="openShareModal()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+        Send this to someone
+      </button>
+      <a class="art-btn" href="learn.html#self">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        More lessons
+      </a>
+      <a class="art-btn" href="get-help.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Talk to someone
+      </a>
     </div>
   </div>
-</section>
+</article>
 
-<!-- 5 · FAQ -->
-<section class="section faq-section">
-  <div class="section-inner">
-    <div class="sec-head">
-      <h2>Common <em>questions</em></h2>
-    </div>
-
-    <div class="faq-list">
-
-      <div class="faq-item open">
-        <button class="faq-q" onclick="toggleFaq(this)">Is this service free?
-          <svg class="faq-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-a"><div class="faq-a-inner">Yes — everything here is completely free. Calls, 1-on-1 sessions, and in-person help are all provided at no cost, thanks to our volunteers and community partners.</div></div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">Do I need to create an account?
-          <svg class="faq-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-a"><div class="faq-a-inner">No account is needed. To book a session we just ask for your name and a phone number or email so we can confirm. You're welcome to call the hotline without sharing anything in advance.</div></div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">What if I can't make my session?
-          <svg class="faq-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-a"><div class="faq-a-inner">No problem at all. Just let us know and we'll happily reschedule for a time that works better. There's never any charge or penalty for changing your booking.</div></div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">Can I get help in my language?
-          <svg class="faq-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-a"><div class="faq-a-inner">Yes. We have volunteers who speak several languages, and we can arrange an interpreter for your session. Just let us know your preferred language when you book.</div></div>
-      </div>
-
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">How long is a session?
-          <svg class="faq-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-        </button>
-        <div class="faq-a"><div class="faq-a-inner">A typical 1-on-1 session lasts about 30–45 minutes, but there's no rush. We'll take the time you need, and you can always book a follow-up if you'd like to keep going.</div></div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
   <div class="footer-brand">
     <div class="footer-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/></svg></div>
@@ -770,6 +735,141 @@ window.addEventListener('DOMContentLoaded', function () {
   document.body.classList.add(cls);
   setTimeout(function () { document.body.classList.remove(cls); }, 420);
 });
+</script>
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <button class="modal-close" onclick="closeShareModal()" aria-label="Close sharing">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <h2 class="modal-title" id="shareTitle">Send this to someone</h2>
+    <p class="modal-sub">Pick how you'd like to pass it along. Nothing gets posted anywhere — it only goes to the person you choose.</p>
+
+    <div class="share-what">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span class="share-what-text">You're sending: <strong id="shareSubject">this page</strong></span>
+    </div>
+
+    <div class="share-opts">
+      <button class="share-opt" onclick="shareCopyLink()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>
+        <span>Copy the link
+          <span class="share-opt-sub">Paste it into a message yourself</span>
+        </span>
+      </button>
+
+      <a class="share-opt" id="shareEmailLink" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+        <span>Send it in an email
+          <span class="share-opt-sub">Opens your email with it already written</span>
+        </span>
+      </a>
+
+      <button class="share-opt" onclick="sharePrint()">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        <span>Print it on paper
+          <span class="share-opt-sub">To hand to someone in person</span>
+        </span>
+      </button>
+    </div>
+
+    <div class="share-note is-hidden" id="shareNote">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+      <span id="shareNoteText">Link copied</span>
+    </div>
+  </div>
+</div>
+<script>
+/* ─── SHARE (static prototype — copies text or opens the user's mail app; we send nothing) ─── */
+var shareState = { subject: 'this page', body: '' };
+
+function openShareModal() {
+  var m = document.getElementById('shareModal');
+  if (!m) return;
+
+  /* If a Hana answer is on screen we send that answer; otherwise the site itself. */
+  var answerState = document.getElementById('answerState');
+  var answerVisible = answerState && !answerState.classList.contains('is-hidden');
+
+  if (answerVisible) {
+    shareState.subject = document.getElementById('userQuestion').textContent || 'this page';
+    shareState.body = document.getElementById('hanaAnswer').textContent || '';
+  } else {
+    var art = document.querySelector('.art-title');
+    shareState.subject = art ? art.textContent.trim() : 'Algorithm Literacy Hub';
+    var lede = document.querySelector('.art-lede');
+    shareState.body = (art && lede) ? lede.textContent.replace(/\s+/g, ' ').trim()
+                                    : 'A free website that explains why you see what you see online.';
+  }
+
+  document.getElementById('shareSubject').textContent = shareState.subject;
+  document.getElementById('shareEmailLink').href = buildShareMailto();
+  hideShareNote();
+
+  m.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeShareModal() {
+  var m = document.getElementById('shareModal');
+  if (!m) return;
+  m.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function buildShareMailto() {
+  var lines = [
+    shareState.subject,
+    '',
+    shareState.body,
+    '',
+    'From the Algorithm Literacy Hub:',
+    window.location.href
+  ];
+  return 'mailto:?subject=' + encodeURIComponent('Thought you might find this useful')
+       + '&body=' + encodeURIComponent(lines.join('\n'));
+}
+
+function shareCopyLink() {
+  var url = window.location.href;
+
+  function fallbackCopy() {
+    var ta = document.createElement('textarea');
+    ta.value = url;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    showShareNote(ok ? 'Link copied' : 'Press Ctrl+C to copy it');
+  }
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(function () {
+      showShareNote('Link copied');
+    }, fallbackCopy);
+  } else {
+    fallbackCopy();
+  }
+}
+
+function sharePrint() {
+  closeShareModal();
+  window.print();
+}
+
+function showShareNote(text) {
+  document.getElementById('shareNoteText').textContent = text;
+  document.getElementById('shareNote').classList.remove('is-hidden');
+}
+
+function hideShareNote() {
+  document.getElementById('shareNote').classList.add('is-hidden');
+}
 </script>
 </body>
 </html>

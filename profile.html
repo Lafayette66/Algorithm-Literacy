@@ -605,7 +605,7 @@ footer {
     <a href="get-help.html">Get help</a>
   </nav>
   <div class="nav-right">
-    <div class="nav-avatar" aria-label="My profile">MC</div>
+    <div class="nav-avatar" aria-label="My profile">BH</div>
     <button class="btn-terra" onclick="location.href='get-help.html#find-help-near-you'">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
       Find help near you
@@ -617,13 +617,13 @@ footer {
 <section class="profile-hero">
   <div class="profile-hero-inner">
     <div class="profile-top">
-      <div class="profile-avatar">MC</div>
+      <div class="profile-avatar">BH</div>
       <div class="profile-info">
-        <div class="profile-name">Maria <em>Chen</em></div>
+        <div class="profile-name">Bill <em>H.</em></div>
         <div class="profile-meta">
           <span class="profile-meta-item">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg>
-            maria.chen@email.com
+            bill@email.com
           </span>
           <span class="profile-meta-item">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
@@ -947,7 +947,7 @@ footer {
           </div>
           <div class="claim-field">
             <label for="mail-name">Full name</label>
-            <input class="claim-input" id="mail-name" type="text" placeholder="Maria Chen">
+            <input class="claim-input" id="mail-name" type="text" placeholder="Bill H.">
           </div>
           <div class="claim-field">
             <label for="mail-street">Street address</label>
@@ -1054,6 +1054,78 @@ document.addEventListener('click', function (ev) {
 });
 document.addEventListener('keydown', function (ev) {
   if (ev.key === 'Escape') closeSoon();
+});
+</script>
+
+<!-- ─── SLIDE TRANSITIONS (workshop prototype) ───
+     Moving between nav pages, or between the Learn tabs, slides the area below
+     the bar in from the side you came from, so the order of the tabs is felt as
+     well as seen. Only the area below the bar moves; the bar itself stays put. -->
+<style>
+body { overflow-x: clip; }   /* keeps the slide from flashing a scrollbar */
+
+@keyframes alhFromRight { from { opacity: 0; transform: translateX(26px); }  to { opacity: 1; transform: none; } }
+@keyframes alhFromLeft  { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: none; } }
+
+/* whole-page entrance: everything below the sticky nav */
+body.alh-right > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style),
+body.alh-left  > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) {
+  animation-duration: .3s;
+  animation-timing-function: cubic-bezier(.22, .61, .36, 1);
+  animation-fill-mode: both;
+}
+body.alh-right > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) { animation-name: alhFromRight; }
+body.alh-left  > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) { animation-name: alhFromLeft; }
+
+/* Learn tabs: only the panel below the tab bar moves */
+.tab-panel { overflow-x: clip; }
+.tab-panel.alh-right { animation: alhFromRight .26s cubic-bezier(.22, .61, .36, 1) both; }
+.tab-panel.alh-left  { animation: alhFromLeft  .26s cubic-bezier(.22, .61, .36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  body.alh-right > *, body.alh-left > *,
+  .tab-panel.alh-right, .tab-panel.alh-left { animation: none !important; }
+}
+</style>
+<script>
+/* Where each page sits in the nav, left to right. The article lives under Learn,
+   so it shares Learn's position and a drill-down does not slide sideways. */
+var ALH_RANK = {
+  'index.html': 0,
+  'learn.html': 1,
+  'reset-recommendations.html': 1,
+  'get-help.html': 2,
+  'profile.html': 3
+};
+function alhFile(href) {
+  var f = (href || '').split('?')[0].split('#')[0].split('/').pop();
+  return f || 'index.html';
+}
+function alhRank(file) {
+  return Object.prototype.hasOwnProperty.call(ALH_RANK, file) ? ALH_RANK[file] : null;
+}
+/* remember which page we are leaving from */
+document.addEventListener('click', function (ev) {
+  var a = ev.target.closest('a[href]');
+  if (!a) return;
+  if (alhRank(alhFile(a.getAttribute('href'))) === null) return;
+  var here = alhRank(alhFile(location.pathname));
+  if (here === null) return;
+  try { sessionStorage.setItem('alhFrom', String(here)); } catch (e) {}
+});
+/* play the entrance on arrival */
+window.addEventListener('DOMContentLoaded', function () {
+  var here = alhRank(alhFile(location.pathname));
+  if (here === null) return;
+  var from = null;
+  try {
+    from = sessionStorage.getItem('alhFrom');
+    sessionStorage.removeItem('alhFrom');
+  } catch (e) {}
+  if (from === null || Number(from) === here) return;
+  var cls = Number(from) < here ? 'alh-right' : 'alh-left';
+  document.body.classList.add(cls);
+  setTimeout(function () { document.body.classList.remove(cls); }, 420);
 });
 </script>
 </body>

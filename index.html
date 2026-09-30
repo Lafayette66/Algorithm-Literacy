@@ -748,7 +748,7 @@ footer {
   </nav>
   <div class="nav-right">
     <button class="btn-ghost" data-auth="out" onclick="openLoginModal()">Sign in</button>
-    <a class="nav-avatar is-hidden" data-auth="in" href="profile.html" aria-label="My profile">MC</a>
+    <a class="nav-avatar is-hidden" data-auth="in" href="profile.html" aria-label="My profile">BH</a>
     <a class="btn-terra" href="get-help.html#find-help-near-you" style="text-decoration:none">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
       Find help near you
@@ -875,7 +875,7 @@ footer {
       </div>
 
       <!-- Facebook card -->
-      <div class="q-card" onclick="askThenScroll('ads')">
+      <div class="q-card" onclick="askThenScroll('talked')">
         <div class="q-card-img q-bg-fb">
           <div class="platform-logo">
             <svg width="84" height="84" viewBox="0 0 84 84" aria-label="Facebook"><circle cx="42" cy="42" r="42" fill="#1877F2"/><path d="M52 42H46V62H38V42H33V35H38V31C38 26 41 23 46 23H52V30H48C47 30 46 30.6 46 32V35H52L52 42Z" fill="white"/></svg>
@@ -998,6 +998,11 @@ var HANA_PRESETS = {
   insurance: {
     q: "Why do I keep seeing insurance ads?",
     a: "It can feel like your device is listening in, but it's simpler than that. If you or someone in your household looked at insurance sites or asked about coverage, advertisers can tag that and keep showing you related ads on other websites — it's called retargeting. It isn't only happening to you, and it fades on its own over time. You can speed it up by adjusting your ad settings or clearing your browsing history.",
+    learnLink: "learn.html#self"
+  },
+  talked: {
+    q: "Why did I see an ad for something I only talked about — not searched for?",
+    a: "It can feel like your device is listening in, but it is usually simpler than that. Ads are matched to a household, not just to you — so if anyone on your wifi searched for it, looked at a shop, or filled in a form about it, you can start seeing those ads too. Once the topic is on your mind you also notice the ads more than you did before. It isn't only happening to you, and it fades on its own over time. You can speed it up by adjusting your ad settings or clearing your browsing history.",
     learnLink: "learn.html#self"
   },
   videos: {
@@ -1176,12 +1181,12 @@ document.addEventListener('keydown', function(ev){
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
     <h2 class="modal-title" id="loginTitle">Sign in</h2>
-    <p class="modal-sub">Sign in to save your progress and pick up where you left off. This is a demo — any email and password will work.</p>
+    <p class="modal-sub">Sign in to save your progress and pick up where you left off. This is a demo — it is already filled in for you, just press Sign in.</p>
     <form class="modal-form" onsubmit="submitLogin(event)">
       <label class="modal-label" for="loginEmail">Email or username</label>
-      <input class="modal-input" id="loginEmail" type="text" autocomplete="username" placeholder="you@example.com">
+      <input class="modal-input" id="loginEmail" type="text" autocomplete="username" value="bill@email.com" placeholder="you@example.com">
       <label class="modal-label" for="loginPassword">Password</label>
-      <input class="modal-input" id="loginPassword" type="password" autocomplete="current-password" placeholder="Your password">
+      <input class="modal-input" id="loginPassword" type="password" autocomplete="current-password" value="workshop" placeholder="Your password">
       <button class="modal-submit" type="submit">Sign in</button>
     </form>
   </div>
@@ -1287,6 +1292,78 @@ document.addEventListener('click', function (ev) {
 });
 document.addEventListener('keydown', function (ev) {
   if (ev.key === 'Escape') closeSoon();
+});
+</script>
+
+<!-- ─── SLIDE TRANSITIONS (workshop prototype) ───
+     Moving between nav pages, or between the Learn tabs, slides the area below
+     the bar in from the side you came from, so the order of the tabs is felt as
+     well as seen. Only the area below the bar moves; the bar itself stays put. -->
+<style>
+body { overflow-x: clip; }   /* keeps the slide from flashing a scrollbar */
+
+@keyframes alhFromRight { from { opacity: 0; transform: translateX(26px); }  to { opacity: 1; transform: none; } }
+@keyframes alhFromLeft  { from { opacity: 0; transform: translateX(-26px); } to { opacity: 1; transform: none; } }
+
+/* whole-page entrance: everything below the sticky nav */
+body.alh-right > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style),
+body.alh-left  > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) {
+  animation-duration: .3s;
+  animation-timing-function: cubic-bezier(.22, .61, .36, 1);
+  animation-fill-mode: both;
+}
+body.alh-right > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) { animation-name: alhFromRight; }
+body.alh-left  > *:not(nav):not(.modal-overlay):not(.soon-toast):not(script):not(style) { animation-name: alhFromLeft; }
+
+/* Learn tabs: only the panel below the tab bar moves */
+.tab-panel { overflow-x: clip; }
+.tab-panel.alh-right { animation: alhFromRight .26s cubic-bezier(.22, .61, .36, 1) both; }
+.tab-panel.alh-left  { animation: alhFromLeft  .26s cubic-bezier(.22, .61, .36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  body.alh-right > *, body.alh-left > *,
+  .tab-panel.alh-right, .tab-panel.alh-left { animation: none !important; }
+}
+</style>
+<script>
+/* Where each page sits in the nav, left to right. The article lives under Learn,
+   so it shares Learn's position and a drill-down does not slide sideways. */
+var ALH_RANK = {
+  'index.html': 0,
+  'learn.html': 1,
+  'reset-recommendations.html': 1,
+  'get-help.html': 2,
+  'profile.html': 3
+};
+function alhFile(href) {
+  var f = (href || '').split('?')[0].split('#')[0].split('/').pop();
+  return f || 'index.html';
+}
+function alhRank(file) {
+  return Object.prototype.hasOwnProperty.call(ALH_RANK, file) ? ALH_RANK[file] : null;
+}
+/* remember which page we are leaving from */
+document.addEventListener('click', function (ev) {
+  var a = ev.target.closest('a[href]');
+  if (!a) return;
+  if (alhRank(alhFile(a.getAttribute('href'))) === null) return;
+  var here = alhRank(alhFile(location.pathname));
+  if (here === null) return;
+  try { sessionStorage.setItem('alhFrom', String(here)); } catch (e) {}
+});
+/* play the entrance on arrival */
+window.addEventListener('DOMContentLoaded', function () {
+  var here = alhRank(alhFile(location.pathname));
+  if (here === null) return;
+  var from = null;
+  try {
+    from = sessionStorage.getItem('alhFrom');
+    sessionStorage.removeItem('alhFrom');
+  } catch (e) {}
+  if (from === null || Number(from) === here) return;
+  var cls = Number(from) < here ? 'alh-right' : 'alh-left';
+  document.body.classList.add(cls);
+  setTimeout(function () { document.body.classList.remove(cls); }, 420);
 });
 </script>
 </body>
