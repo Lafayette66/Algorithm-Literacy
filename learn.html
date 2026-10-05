@@ -512,6 +512,17 @@ footer { background: var(--white); border-top: 1.5px solid var(--border); paddin
   cursor: pointer; font-family: inherit; transition: background .15s;
 }
 .modal-submit:hover { background: var(--green-dark); }
+
+/* ─── AVATAR PHOTO ─── */
+/* Bill's portrait fills the round avatar wells; the wells keep their own size. */
+.avatar-img {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 22%;   /* keeps his face centred, not his collar */
+  display: block;
+}
+.nav-avatar, .greet-avatar, .profile-avatar { overflow: hidden; padding: 0; }
 </style>
 <!-- ─── SLIDE TRANSITIONS · part 1 of 2 (workshop prototype) ───
      Both the style and the class must be in place before the first paint,
@@ -618,7 +629,7 @@ html.alh-left  .hero *, html.alh-left  .greet * {
   </nav>
   <div class="nav-right">
     <button class="btn-ghost" data-auth="out" onclick="openLoginModal()">Sign in</button>
-    <a class="nav-avatar is-hidden" data-auth="in" href="profile.html" aria-label="My profile">BH</a>
+    <a class="nav-avatar is-hidden" data-auth="in" href="profile.html" aria-label="My profile"><img class="avatar-img" src="bill-avatar.png" alt="Bill H."></a>
     <button class="btn-terra" onclick="location.href='get-help.html#find-help-near-you'">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
       Find help near you
@@ -644,8 +655,8 @@ html.alh-left  .hero *, html.alh-left  .greet * {
 
     <!-- signed-in: personalized greeting -->
     <div class="greet-top is-hidden" data-auth="in">
-      <div class="greet-avatar">BH</div>
-      <h1 class="greet-title">Good morning, Bill</h1>
+      <div class="greet-avatar"><img class="avatar-img" src="bill-avatar.png" alt="Bill H."></div>
+      <h1 class="greet-title">Welcome back, Bill</h1>
     </div>
 
     <p class="greet-sub">What would you like to learn today?</p>
